@@ -10,7 +10,7 @@ import { useRefDimensions } from 'app/hooks/use-ref-dimensions';
 const SPACING = 8;
 const CARD_WIDTH = 160;
 export const BattlePlayersQueue = () => {
-  const { battleState: battle } = useBattle();
+  const { battle } = useBattle();
   const [queue, setQueue] = useState<BattlePlayerType[]>([]);
   const ref = useRef<HTMLElement>(null);
   const [w] = useRefDimensions(ref);
@@ -85,7 +85,7 @@ export const BattlePlayersQueue = () => {
           </ul>
         </div>
       ) : (
-        <ul className="flex gap-4">
+        <ul className="flex gap-4 justify-center">
           {queue.length > 0 &&
             queue.map((item, i) => (
               <li key={i} className="w-40" style={{ width: CARD_WIDTH }}>

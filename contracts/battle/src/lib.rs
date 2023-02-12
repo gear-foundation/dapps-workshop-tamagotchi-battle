@@ -193,6 +193,7 @@ impl Battle {
         player_0.defence = MAX_POWER - player_0.power;
         player_1.power = generate_power(self.round.tmg_ids[1]);
         player_1.defence = MAX_POWER - player_1.power;
+
         self.players.insert(self.round.tmg_ids[0], player_0);
         self.players.insert(self.round.tmg_ids[1], player_1);
         self.round.moves = Vec::new();
