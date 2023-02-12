@@ -182,7 +182,7 @@ impl Battle {
         };
         self.round.steps += 1;
         if self.round.steps == MAX_STEPS_IN_ROUND && self.state == BattleState::GameIsOn {
-            self.current_winner = if player_0.health >= player_1.health {
+            self.current_winner = if player_0.health > player_1.health {
                 self.round.tmg_ids[0]
             } else {
                 self.round.tmg_ids[1]
@@ -192,7 +192,7 @@ impl Battle {
         player_0.power = generate_power(self.round.tmg_ids[0]);
         player_0.defence = MAX_POWER - player_0.power;
         player_1.power = generate_power(self.round.tmg_ids[1]);
-        player_1.defence = MAX_POWER - player_1.defence;
+        player_1.defence = MAX_POWER - player_1.power;
         self.players.insert(self.round.tmg_ids[0], player_0);
         self.players.insert(self.round.tmg_ids[1], player_1);
         self.round.moves = Vec::new();
