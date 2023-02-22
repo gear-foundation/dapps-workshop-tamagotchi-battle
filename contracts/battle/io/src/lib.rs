@@ -3,6 +3,7 @@
 use gmeta::{InOut, Metadata};
 use gstd::{prelude::*, ActorId};
 pub type TamagotchiId = ActorId;
+pub type PairId = u8;
 pub struct BattleMetadata;
 
 impl Metadata for BattleMetadata {
@@ -21,9 +22,10 @@ pub struct Battle {
     pub players_ids: Vec<ActorId>,
     pub state: BattleState,
     pub current_winner: ActorId,
-    pub round: Round,
+    pub pairs: BTreeMap<PairId, Pair>,
+    pub players_to_pairs: BTreeMap<ActorId, Vec<PairId>>,
+    pub completed_games: u8,
 }
-
 #[derive(Default, Debug, Clone, Encode, Decode, TypeInfo)]
 pub struct Player {
     pub owner: ActorId,
@@ -34,20 +36,24 @@ pub struct Player {
     pub power: u16,
     pub health: u16,
     pub color: String,
+    pub victories: u32,
 }
 
-#[derive(Encode, Decode, TypeInfo, Debug)]
+#[derive(Encode, Decode, TypeInfo, PartialEq, Eq, Debug, Clone)]
 pub enum Move {
     Attack,
     Defence,
 }
 
-#[derive(Default, Debug, Encode, Decode, TypeInfo)]
-pub struct Round {
-    pub players: Vec<ActorId>,
+#[derive(Default, Debug, Encode, Decode, TypeInfo, Clone)]
+pub struct Pair {
+    pub owner_ids: Vec<ActorId>,
     pub tmg_ids: Vec<ActorId>,
-    pub moves: Vec<Move>,
-    pub steps: u8,
+    pub moves: Vec<Option<Move>>,
+    pub rounds: u8,
+    pub game_is_over: bool,
+    pub winner: ActorId,
+    pub move_deadline: u64,
 }
 
 #[derive(Debug, PartialEq, Eq, Encode, Decode, TypeInfo)]
@@ -67,12 +73,11 @@ impl Default for BattleState {
 #[derive(Encode, Decode, TypeInfo, Debug)]
 pub enum BattleAction {
     Register { tmg_id: TamagotchiId },
-    MakeMove(Move),
-    StartNewGame,
-    StartNewGameForce,
+    MakeMove { pair_id: PairId, tmg_move: Move },
+    StartBattleForce,
     StartBattle,
-    StartNewRound,
     UpdateAdmin(ActorId),
+    CheckIfMoveMade(PairId),
 }
 
 #[derive(Encode, Decode, TypeInfo, PartialEq, Eq)]
@@ -83,8 +88,8 @@ pub enum BattleEvent {
     GameIsOver,
     InfoUpdated,
     NewGame,
-    GameStarted,
-    RoundResult((u16, u16)),
+    BattleStarted,
+    RoundResult((PairId, u16, u16, Option<Move>, Option<Move>)),
     NewRound,
     AdminUpdated,
 }
