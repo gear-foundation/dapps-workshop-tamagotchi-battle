@@ -114,8 +114,8 @@ impl Battle {
             };
             self.pairs.insert(pair_id as u8, pair);
 
-debug!("PLAYERS LEN");
-            if players_len == 1 || players_len == 0{
+            debug!("PLAYERS LEN");
+            if players_len == 1 || players_len == 0 {
                 break;
             }
         }
@@ -217,6 +217,7 @@ debug!("PLAYERS LEN");
                 players[id].victories = players[id].victories.saturating_add(1);
                 players[id].power = generate_power(pair.tmg_ids[id]);
                 players[id].defence = MAX_POWER - players[id].power;
+                players[id].health = 2500;
                 let tmg_id = pair.tmg_ids[id];
                 self.players_ids.push(tmg_id);
                 pair.winner = tmg_id;

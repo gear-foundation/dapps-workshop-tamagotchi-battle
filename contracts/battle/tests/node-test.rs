@@ -235,15 +235,6 @@ async fn battle() -> Result<()> {
             .await?;
         println!("Tmg Ids {:?}", tmg_ids);
 
-        battle_state = client
-            .read_state_using_wasm_by_path(
-                battle_id.into(),
-                "battle_state",
-                META_WASM,
-                <Option<()>>::None,
-            )
-            .await?;
-        println!("Battle state {:?}", battle_state);
         if battle_state == BattleState::WaitNextRound {
             let client = client
                 .clone()
@@ -275,33 +266,41 @@ async fn battle() -> Result<()> {
             let mut game_is_over = false;
             while game_is_over == false {
                 let pair: Pair = client
-                .read_state_using_wasm_by_path(
-                    battle_id.into(),
-                    "pair",
-                    META_WASM,
-                    Some(pair_id),
-                )
-                .await?;
+                    .read_state_using_wasm_by_path(
+                        battle_id.into(),
+                        "pair",
+                        META_WASM,
+                        Some(pair_id),
+                    )
+                    .await?;
 
-                let (power, health): (u16, u16) =  client
-                .read_state_using_wasm_by_path(
-                    battle_id.into(),
-                    "power_and_health",
-                    META_WASM,
-                    Some(pair.tmg_ids[0]),
-                ).await?;
+                let (power, health): (u16, u16) = client
+                    .read_state_using_wasm_by_path(
+                        battle_id.into(),
+                        "power_and_health",
+                        META_WASM,
+                        Some(pair.tmg_ids[0]),
+                    )
+                    .await?;
 
-                println!("Power {:?} and health {:?} for first tamagotchi", power, health);
+                println!(
+                    "Power {:?} and health {:?} for first tamagotchi",
+                    power, health
+                );
 
-                let (power, health): (u16, u16) =  client
-                .read_state_using_wasm_by_path(
-                    battle_id.into(),
-                    "power_and_health",
-                    META_WASM,
-                    Some(pair.tmg_ids[1]),
-                ).await?;
+                let (power, health): (u16, u16) = client
+                    .read_state_using_wasm_by_path(
+                        battle_id.into(),
+                        "power_and_health",
+                        META_WASM,
+                        Some(pair.tmg_ids[1]),
+                    )
+                    .await?;
 
-                println!("Power {:?} and health {:?} for first tamagotchi", power, health);
+                println!(
+                    "Power {:?} and health {:?} for first tamagotchi",
+                    power, health
+                );
 
                 let current_player: ActorId = client
                     .read_state_using_wasm_by_path(
@@ -341,6 +340,15 @@ async fn battle() -> Result<()> {
                     .await?;
             }
         }
+        battle_state = client
+            .read_state_using_wasm_by_path(
+                battle_id.into(),
+                "battle_state",
+                META_WASM,
+                <Option<()>>::None,
+            )
+            .await?;
+        println!("Battle state {:?}", battle_state);
     }
     // // first round
     // println!("First round");
