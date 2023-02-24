@@ -77,7 +77,7 @@ pub enum BattleAction {
     StartBattleForce,
     StartBattle,
     UpdateAdmin(ActorId),
-    CheckIfMoveMade(PairId),
+    CheckIfMoveMade{ pair_id: PairId, move_id: u8},
 }
 
 #[derive(Encode, Decode, TypeInfo, PartialEq, Eq)]

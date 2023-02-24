@@ -2,7 +2,7 @@
 
 use battle_io::*;
 use core::array;
-use gstd::{debug, exec, msg, prelude::*, ActorId};
+use gstd::{debug, exec::{self, gas_available}, msg, prelude::*, ActorId, ReservationId};
 use tmg_io::{TmgAction, TmgEvent};
 const MAX_POWER: u16 = 10_000;
 const MAX_RANGE: u16 = 7_000;
@@ -12,7 +12,9 @@ const MAX_PARTICIPANTS: u8 = 50;
 const MAX_STEPS_IN_ROUND: u8 = 5;
 const COLORS: [&str; 6] = ["Green", "Red", "Blue", "Purple", "Orange", "Yellow"];
 const TIME_FOR_MOVE: u32 = 60;
-const GAS_AMOUNT: u64 = 20_000_000_000;
+const GAS_AMOUNT: u64 = 15_000_000_000;
+const RESERVATION_AMOUNT: u64 = 200_000_000_000;
+const RESERVATION_DURATION: u32 = 86_400;
 
 #[derive(Default, Encode, Decode, TypeInfo)]
 pub struct Battle {
@@ -24,6 +26,7 @@ pub struct Battle {
     pub pairs: BTreeMap<PairId, Pair>,
     pub players_to_pairs: BTreeMap<ActorId, Vec<PairId>>,
     pub completed_games: u8,
+    pub reservations: Vec<ReservationId>,
 }
 static mut BATTLE: Option<Battle> = None;
 impl Battle {
@@ -43,28 +46,35 @@ impl Battle {
             panic!("This tamagotchi is already in game!");
         }
 
-        let (owner, name, date_of_birth) = get_tmg_info(tmg_id).await;
+        if !self.players.contains_key(tmg_id) {
+            let (owner, name, date_of_birth) = get_tmg_info(tmg_id).await;
 
-        if owner != msg::source() {
-            panic!("It is not your Tamagotchi");
+            if owner != msg::source() {
+                panic!("It is not your Tamagotchi");
+            }
+
+            let power = generate_power(*tmg_id);
+            let defence = MAX_POWER - power;
+            let color_index = get_random_value(COLORS.len() as u8);
+            let player = Player {
+                owner,
+                name,
+                date_of_birth,
+                tmg_id: *tmg_id,
+                defence,
+                power,
+                health: HEALTH,
+                color: COLORS[color_index as usize].to_string(),
+                victories: 0,
+            };
+            self.players.insert(*tmg_id, player);
         }
 
-        let power = generate_power(*tmg_id);
-        let defence = MAX_POWER - power;
-        let color_index = get_random_value(COLORS.len() as u8);
-        let player = Player {
-            owner,
-            name,
-            date_of_birth,
-            tmg_id: *tmg_id,
-            defence,
-            power,
-            health: HEALTH,
-            color: COLORS[color_index as usize].to_string(),
-            victories: 0,
-        };
-        self.players.insert(*tmg_id, player);
         self.players_ids.push(*tmg_id);
+
+        let reservation_id = ReservationId::reserve(RESERVATION_AMOUNT, RESERVATION_DURATION)
+            .expect("reservation across executions");
+        self.reservations.push(reservation_id);
         if self.players.len() as u8 == MAX_PARTICIPANTS {}
         msg::reply(BattleEvent::Registered { tmg_id: *tmg_id }, 0)
             .expect("Error during a reply `BattleEvent::Registered");
@@ -110,11 +120,17 @@ impl Battle {
                 rounds: 0,
                 game_is_over: false,
                 winner: ActorId::zero(),
-                move_deadline: 0,
+                move_deadline: exec::block_timestamp() + (TIME_FOR_MOVE * 1_000) as u64,
             };
             self.pairs.insert(pair_id as u8, pair);
+            msg::send_delayed(
+                exec::program_id(),
+                BattleAction::CheckIfMoveMade{pair_id: pair_id as u8, move_id: 0},
+                0,
+                TIME_FOR_MOVE + 1,
+            )
+            .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
 
-            debug!("PLAYERS LEN");
             if players_len == 1 || players_len == 0 {
                 break;
             }
@@ -153,12 +169,19 @@ impl Battle {
         self.make_move_internal(pair_id, Some(tmg_move));
     }
 
-    fn check_if_move_made(&mut self, pair_id: PairId) {
+    fn check_if_move_made(&mut self, move_id: u8, pair_id: PairId) {
         debug!("Delayed message");
         assert!(
             msg::source() == exec::program_id() || msg::source() == self.admin,
             "Only program or admin can send this message"
         );
+        let pair = self.pairs.get(&pair_id).expect("Pair does not exist");
+        if pair.move_deadline > exec::block_timestamp() {
+            panic!("The player's turn time has not yet passed")
+        }
+        if pair.rounds != move_id {
+            panic!("Move was made");
+        }
         self.make_move_internal(pair_id, None);
     }
 
@@ -176,13 +199,13 @@ impl Battle {
         let current_turn = pair.moves.len();
         let owner = pair.owner_ids[current_turn];
 
-        if tmg_move.is_none() && pair.move_deadline < exec::block_timestamp() {
-            panic!("The player's turn time has not yet passed")
-        } else {
+        debug!("MOVE 10 {:?}", tmg_move);
+        debug!("TIME {:?}", exec::block_timestamp());
+        debug!("MOVE_DEADLINE {:?}", pair.move_deadline);
+        if tmg_move.is_some() {
             assert_eq!(owner, msg::source(), "It is not your turn!");
-        }
-
-        pair.moves.push(tmg_move);
+        };
+        pair.moves.push(tmg_move.clone());
 
         let mut players: Vec<Player> = Vec::new();
         players.push(
@@ -191,6 +214,7 @@ impl Battle {
                 .expect("Player does not exist")
                 .clone(),
         );
+        debug!("GAS  {:?}", exec::gas_available());
         players.push(
             self.players
                 .get(&pair.tmg_ids[1])
@@ -236,10 +260,12 @@ impl Battle {
             if self.completed_games == pairs_len as u8 {
                 if self.players_ids.len() == 1 {
                     self.state = BattleState::GameIsOver;
+                    self.current_winner = self.players_ids[0];
                 } else {
                     self.state = BattleState::WaitNextRound;
                 }
             }
+            debug!("GAS  {:?}", exec::gas_available());
 
             msg::send(
                 self.admin,
@@ -254,20 +280,35 @@ impl Battle {
             )
             .expect("Error in sending a message `TmgEvent::RoundResult`");
         }
+        debug!("GAS  {:?}", exec::gas_available());
         if self.state != BattleState::GameIsOver
             && self.state != BattleState::WaitNextRound
             && !pair.game_is_over
         {
-            pair.move_deadline = exec::block_timestamp() + TIME_FOR_MOVE as u64;
-            msg::send_with_gas_delayed(
-                exec::program_id(),
-                BattleAction::CheckIfMoveMade(pair_id),
-                GAS_AMOUNT,
-                0,
-                TIME_FOR_MOVE,
-            )
-            .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
+            pair.move_deadline = exec::block_timestamp() + (TIME_FOR_MOVE * 1_000) as u64;
+            if gas_available() <= GAS_AMOUNT {
+                if let Some(reservation_id) = self.reservations.pop() {
+                msg::send_delayed_from_reservation(
+                    reservation_id,
+                    exec::program_id(),
+                    BattleAction::CheckIfMoveMade{pair_id, move_id: pair.rounds},
+                    0,
+                    TIME_FOR_MOVE + 1,
+                )
+                .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
+                }
+            } else {
+                msg::send_delayed(
+                    exec::program_id(),
+                    BattleAction::CheckIfMoveMade{pair_id, move_id: pair.rounds},
+                    0,
+                    TIME_FOR_MOVE + 1,
+                )
+                .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
+            }
+    
         }
+        debug!("PAIR {:?}", pair);
         msg::reply(BattleEvent::MoveMade, 0)
             .expect("Error in sending a reply `BattleEvent::MoveMade`");
     }
@@ -308,7 +349,7 @@ async fn main() {
         BattleAction::StartBattle => battle.start_battle(),
         BattleAction::StartBattleForce => battle.start_new_game_force(),
         BattleAction::UpdateAdmin(new_admin) => battle.update_admin(&new_admin),
-        BattleAction::CheckIfMoveMade(pair_id) => battle.check_if_move_made(pair_id),
+        BattleAction::CheckIfMoveMade{pair_id, move_id} => battle.check_if_move_made(move_id, pair_id),
     }
 }
 
