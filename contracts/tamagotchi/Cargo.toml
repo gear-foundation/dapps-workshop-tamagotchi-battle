@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 gstd = { git = "https://github.com/gear-tech/gear.git", features = ["debug"], branch = "testnet" }
 scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
-codec = { package = "parity-scale-codec", version = "3.1.2", default-features = false, features = ["derive", "full"] }
+parity-scale-codec = { version = "3", default-features = false }
 tmg-io = { path = "io" }
 
 [build-dependencies]

@@ -1,7 +1,7 @@
 #![no_std]
 
 use gmeta::{InOut, Metadata};
-use gstd::{prelude::*, ActorId};
+use gstd::{prelude::*, ActorId, MessageId, ReservationId};
 pub type TamagotchiId = ActorId;
 pub type PairId = u8;
 pub struct BattleMetadata;
@@ -25,6 +25,7 @@ pub struct Battle {
     pub pairs: BTreeMap<PairId, Pair>,
     pub players_to_pairs: BTreeMap<ActorId, Vec<PairId>>,
     pub completed_games: u8,
+    pub reservations: BTreeMap<ActorId, ReservationId>,
 }
 #[derive(Default, Debug, Clone, Encode, Decode, TypeInfo)]
 pub struct Player {
@@ -54,6 +55,7 @@ pub struct Pair {
     pub game_is_over: bool,
     pub winner: ActorId,
     pub move_deadline: u64,
+    pub msg_id: MessageId,
 }
 
 #[derive(Debug, PartialEq, Eq, Encode, Decode, TypeInfo)]
@@ -72,16 +74,25 @@ impl Default for BattleState {
 
 #[derive(Encode, Decode, TypeInfo, Debug)]
 pub enum BattleAction {
-    Register { tmg_id: TamagotchiId },
-    MakeMove { pair_id: PairId, tmg_move: Move },
-    StartBattleForce,
+    StartRegistration,
+    Register {
+        tmg_id: TamagotchiId,
+    },
+    MakeMove {
+        pair_id: PairId,
+        tmg_move: Move,
+    },
     StartBattle,
     UpdateAdmin(ActorId),
-    CheckIfMoveMade{ pair_id: PairId, move_id: u8},
+    CheckIfMoveMade {
+        pair_id: PairId,
+        tmg_id: Option<TamagotchiId>,
+    },
 }
 
 #[derive(Encode, Decode, TypeInfo, PartialEq, Eq)]
 pub enum BattleEvent {
+    RegistrationStarted,
     Registered { tmg_id: TamagotchiId },
     MoveMade,
     GoToWaitingState,
