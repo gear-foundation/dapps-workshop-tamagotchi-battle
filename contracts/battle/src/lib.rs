@@ -1,7 +1,7 @@
 #![no_std]
 
 use battle_io::*;
-use gstd::{debug, exec, msg, prelude::*, MessageId, ActorId, ReservationId};
+use gstd::{debug, exec, msg, prelude::*, ActorId, MessageId, ReservationId};
 use tmg_io::{TmgAction, TmgEvent};
 const MAX_POWER: u16 = 10_000;
 const MAX_RANGE: u16 = 7_000;
@@ -20,6 +20,7 @@ pub struct Battle {
     pub admin: ActorId,
     pub players: BTreeMap<ActorId, Player>,
     pub players_ids: Vec<ActorId>,
+    pub current_players: Vec<ActorId>,
     pub state: BattleState,
     pub current_winner: ActorId,
     pub pairs: BTreeMap<PairId, Pair>,
@@ -40,10 +41,12 @@ impl Battle {
         self.players_ids = Vec::new();
         self.completed_games = 0;
         self.players_to_pairs = BTreeMap::new();
+        self.current_players = Vec::new();
         self.pairs = BTreeMap::new();
         msg::reply(BattleEvent::RegistrationStarted, 0)
             .expect("Error in sending a reply `BattleEvent::RegistrationStarted`");
     }
+
     async fn register(&mut self, tmg_id: &TamagotchiId) {
         assert_eq!(
             self.state,
@@ -81,19 +84,50 @@ impl Battle {
             };
             self.players.insert(*tmg_id, player);
         } else {
-            self.players.entry(*tmg_id).and_modify(|player| player.health = HEALTH);
+            self.players
+                .entry(*tmg_id)
+                .and_modify(|player| player.health = HEALTH);
         }
 
         self.players_ids.push(*tmg_id);
+        self.current_players.push(*tmg_id);
 
         let reservation_id = ReservationId::reserve(RESERVATION_AMOUNT, RESERVATION_DURATION)
             .expect("reservation across executions");
         self.reservations.insert(*tmg_id, reservation_id);
-        if self.players_ids.len() as u8 == MAX_PARTICIPANTS {
-            panic!("Maximum number of participants reached")
-        }
+
         msg::reply(BattleEvent::Registered { tmg_id: *tmg_id }, 0)
             .expect("Error during a reply `BattleEvent::Registered");
+    }
+
+    /// Starts the battle.
+    /// This message must be sent after the registration end (the contract is in the `BattleState::Registration` state)
+    /// It must also be sent when the game is on but a round is ended (the contract is in the `BattleState::WaitNextRound` state)
+    /// BattleState::WaitNextRound` state means the the battles in pairs are over and winners are expecting to play in the next round
+    fn start_battle(&mut self) {
+        assert!(
+            self.state == BattleState::Registration || self.state == BattleState::WaitNextRound,
+            "The battle can be started from registration stage of after completing a round"
+        );
+
+        assert!(
+            self.players_ids.len() > 1,
+            "At least 2 players must be in the game"
+        );
+
+        assert_eq!(self.admin, msg::source(), "Only admin can start the battle");
+
+        // Clear the state if the state is `BattleState::WaitNextRound`
+        self.pairs = BTreeMap::new();
+        self.players_to_pairs = BTreeMap::new();
+        self.completed_games = 0;
+
+        self.split_into_pairs();
+
+        self.state = BattleState::GameIsOn;
+
+        msg::reply(BattleEvent::BattleStarted, 0)
+            .expect("Error in a reply `BattleEvent::BattleStarted`");
     }
 
     fn split_into_pairs(&mut self) {
@@ -104,7 +138,7 @@ impl Battle {
             let first_tmg = self.players_ids.remove(first_tmg_id as usize);
 
             let first_owner = if let Some(player) = self.players.get_mut(&first_tmg) {
-                player.health = 2500;
+                player.health = HEALTH;
                 player.owner
             } else {
                 panic!("Can't be None: Tmg does not exsit");
@@ -131,16 +165,12 @@ impl Battle {
                 .entry(second_owner)
                 .and_modify(|pair_ids| pair_ids.push(pair_id as u8))
                 .or_insert_with(|| vec![pair_id as u8]);
-            let msg_id = msg::send_delayed(
-                exec::program_id(),
-                BattleAction::CheckIfMoveMade {
-                    pair_id: pair_id as u8,
-                    tmg_id: None,
-                },
-                0,
-                TIME_FOR_MOVE + 1,
-            )
-            .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
+
+            // the delayed message is sent to check whether the player made the move
+            // his gas then reserved and saved again
+            let reservation_id = self.reservations.remove(&first_tmg).expect("Can't be None");
+            let msg_id = send_delayed_msg_from_rsv(reservation_id, pair_id as u8, &first_tmg);
+
             let pair = Pair {
                 owner_ids: vec![first_owner, second_owner],
                 tmg_ids: vec![first_tmg, second_tmg],
@@ -159,33 +189,20 @@ impl Battle {
         }
     }
 
-    fn start_battle(&mut self) {
-        assert!(
-            self.completed_games == self.pairs.len() as u8,
-            "The previous game is not over"
-        );
-
-        self.pairs = BTreeMap::new();
-        self.players_to_pairs = BTreeMap::new();
-        self.completed_games = 0;
-        if self.admin != msg::source() {
-            panic!("Only admin can start the battle");
-        }
-
-        self.split_into_pairs();
-
-        self.state = BattleState::GameIsOn;
-
-        msg::reply(BattleEvent::BattleStarted, 0)
-            .expect("Error in a reply `BattleEvent::BattleStarted`");
-    }
-
     fn make_move(&mut self, pair_id: PairId, tmg_move: Move) {
         assert_eq!(
             self.state,
             BattleState::GameIsOn,
             "The game is not in `GameIsOn` state"
         );
+
+        let pair = self.pairs.get(&pair_id).expect("Pair does not exist");
+        assert_eq!(pair.game_is_over, false, "The game for this pair is over");
+
+        let current_turn = pair.moves.len();
+        let owner = pair.owner_ids[current_turn];
+        assert_eq!(owner, msg::source(), "It is not your turn!");
+
         let pair_ids = self
             .players_to_pairs
             .get(&msg::source())
@@ -193,7 +210,17 @@ impl Battle {
         if !pair_ids.contains(&pair_id) {
             panic!("It is not your game");
         }
-        self.make_move_internal(pair_id, Some(tmg_move));
+
+        let game_is_over = self.make_move_internal(pair_id, Some(tmg_move));
+
+        if !game_is_over {
+            let msg_id = send_delayed_msg_with_gas(pair_id);
+            self.pairs
+                .entry(pair_id)
+                .and_modify(|pair| pair.msg_id = msg_id);
+        }
+
+        reply_move_made();
     }
 
     fn check_if_move_made(&mut self, pair_id: PairId, tmg_id: Option<TamagotchiId>) {
@@ -216,61 +243,86 @@ impl Battle {
                 self.reservations.insert(tmg_id, reservation_id);
             }
         }
-
+        if pair.game_is_over {
+            return;
+        }
         if msg::source() == exec::program_id() && pair.msg_id != msg::id() {
             return;
         }
 
         // if too early for checking the move
         if pair.move_deadline > exec::block_timestamp() {
-            debug!("DEADLINE {:?}", pair.move_deadline);
-            debug!("TIMESTAMP {:?}", exec::block_timestamp());
             return;
         }
 
-        self.make_move_internal(pair_id, None);
+        // message from reservation of player who skipped the move
+        let current_turn = pair.moves.len();
+        let current_tmg = pair.tmg_ids[current_turn];
+
+        // Get gas from current player who skips the move
+        let reservation_id = if let Some(reservation_id) = self.reservations.remove(&current_tmg) {
+            debug!("GAS FROM RESERVATION {:?}", current_turn);
+            reservation_id
+        } else {
+            // if player has no reservation that means that he skipped many moves
+            // and his initial gas ended
+            // this player lost
+            let winner_id = (current_turn + 1) % 2;
+            let winner_tmg = pair.tmg_ids[winner_id];
+            let winner_player = self
+                .players
+                .get_mut(&winner_tmg)
+                .expect("Can't be None: Player does not exist");
+            winner_player.victories = winner_player.victories.saturating_add(1);
+            winner_player.power = generate_power(winner_tmg);
+            winner_player.defence = MAX_POWER - winner_player.power;
+            self.completed_games += 1;
+            self.players_ids.push(winner_tmg);
+            let mut moves = pair.moves.clone();
+            moves.push(None);
+            self.pairs.entry(pair_id).and_modify(|pair| {
+                pair.winner = winner_tmg;
+                pair.game_is_over = true;
+                pair.msg_id = MessageId::from([0; 32]);
+                pair.moves = Vec::new();
+            });
+
+            let mut losses: [u16; 2] = [0, 0];
+            self.players.entry(current_tmg).and_modify(|player| {
+                losses[current_turn] = player.health;
+                player.health = 0;
+            });
+
+            if self.completed_games == self.pairs.len() as u8 {
+                if self.players_ids.len() == 1 {
+                    self.state = BattleState::GameIsOver;
+                    self.current_winner = self.players_ids[0];
+                } else {
+                    self.state = BattleState::WaitNextRound;
+                }
+            }
+
+            send_round_result(&self.admin, pair_id, &losses, &moves);
+
+            reply_move_made();
+            return;
+        };
+
+        let game_is_over = self.make_move_internal(pair_id, None);
+
+        if !game_is_over {
+            let msg_id = send_delayed_msg_from_rsv(reservation_id, pair_id, &current_tmg);
+            self.pairs
+                .entry(pair_id)
+                .and_modify(|pair| pair.msg_id = msg_id);
+        }
+
+        reply_move_made();
     }
 
-    fn make_move_internal(&mut self, pair_id: PairId, tmg_move: Option<Move>) {
-        let pairs_len = self.pairs.len();
+    fn make_move_internal(&mut self, pair_id: PairId, tmg_move: Option<Move>) -> bool {
+        let pairs_len = self.pairs.len() as u8;
         let pair = self.pairs.get_mut(&pair_id).expect("Pair does not exist");
-        assert_eq!(pair.game_is_over, false, "The game for that pair is over!");
-
-        let current_turn = pair.moves.len();
-        let owner = pair.owner_ids[current_turn];
-
-        debug!("MOVE 10 {:?}", tmg_move);
-        debug!("TIME {:?}", exec::block_timestamp());
-        debug!("MOVE_DEADLINE {:?}", pair.move_deadline);
-
-        if tmg_move.is_some() {
-            assert_eq!(owner, msg::source(), "It is not your turn!");
-        } else {
-            let current_tmg = pair.tmg_ids[current_turn];
-            // Get gas from current player who skips the move
-            if let Some(reservation_id) = self.reservations.remove(&current_tmg) {
-                debug!("GAS FROM RESERVATION {:?}", current_turn);
-                pair.move_deadline = exec::block_timestamp() + (TIME_FOR_MOVE * 1_000) as u64;
-                let msg_id = msg::send_delayed_from_reservation(
-                    reservation_id,
-                    exec::program_id(),
-                    BattleAction::CheckIfMoveMade {
-                        pair_id,
-                        tmg_id: Some(current_tmg),
-                    },
-                    0,
-                    TIME_FOR_MOVE + 1,
-                )
-                .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
-                pair.msg_id = msg_id;
-            } else {
-                // if player has no reservation that means that he skipped many moves
-                // and his initial gas ended
-                self.players
-                    .entry(current_tmg)
-                    .and_modify(|player| player.health = 0);
-            }
-        };
 
         pair.moves.push(tmg_move.clone());
 
@@ -294,7 +346,7 @@ impl Battle {
             let moves = pair.moves.clone();
             pair.moves = Vec::new();
             let (mut winner, loss_0, loss_1) = resolve_battle(&mut players, moves.clone());
-            if pair.rounds == MAX_STEPS_IN_ROUND {
+            if pair.rounds == MAX_STEPS_IN_ROUND && winner.is_none() {
                 winner = if players[0].health >= players[1].health {
                     players[1].health = 0;
                     Some(0)
@@ -332,45 +384,12 @@ impl Battle {
                     self.state = BattleState::WaitNextRound;
                 }
             }
+
             debug!("GAS  {:?}", exec::gas_available());
-
-            msg::send(
-                self.admin,
-                BattleEvent::RoundResult((
-                    pair_id,
-                    loss_0,
-                    loss_1,
-                    moves[0].clone(),
-                    moves[1].clone(),
-                )),
-                0,
-            )
-            .expect("Error in sending a message `TmgEvent::RoundResult`");
+            send_round_result(&self.admin, pair_id, &[loss_0, loss_1], &moves);
         }
-        debug!("GAS  {:?}", exec::gas_available());
-        if self.state != BattleState::GameIsOver
-            && self.state != BattleState::WaitNextRound
-            && !pair.game_is_over
-            && tmg_move.is_some()
-        {
-            pair.move_deadline = exec::block_timestamp() + (TIME_FOR_MOVE * 1_000) as u64;
-
-            let msg_id = msg::send_with_gas_delayed(
-                exec::program_id(),
-                BattleAction::CheckIfMoveMade {
-                    pair_id,
-                    tmg_id: None,
-                },
-                GAS_AMOUNT,
-                0,
-                TIME_FOR_MOVE + 1,
-            )
-            .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`");
-            pair.msg_id = msg_id;
-        }
-        debug!("PAIR {:?}", pair);
-        msg::reply(BattleEvent::MoveMade, 0)
-            .expect("Error in sending a reply `BattleEvent::MoveMade`");
+        pair.move_deadline = exec::block_timestamp() + (TIME_FOR_MOVE * 1_000) as u64;
+        pair.game_is_over
     }
 
     fn update_admin(&mut self, new_admin: &ActorId) {
@@ -395,10 +414,9 @@ async fn main() {
         BattleAction::MakeMove { pair_id, tmg_move } => battle.make_move(pair_id, tmg_move),
         BattleAction::StartBattle => battle.start_battle(),
         BattleAction::UpdateAdmin(new_admin) => battle.update_admin(&new_admin),
-        BattleAction::CheckIfMoveMade {
-            pair_id,
-            tmg_id,
-        } => battle.check_if_move_made(pair_id, tmg_id),
+        BattleAction::CheckIfMoveMade { pair_id, tmg_id } => {
+            battle.check_if_move_made(pair_id, tmg_id)
+        }
     }
 }
 
@@ -592,4 +610,55 @@ fn resolve_battle(players: &mut Vec<Player>, moves: Vec<Option<Move>>) -> (Optio
         _ => unreachable!(),
     };
     (winner, loss_0, loss_1)
+}
+
+fn send_round_result(admin: &ActorId, pair_id: PairId, losses: &[u16], moves: &Vec<Option<Move>>) {
+    msg::send(
+        *admin,
+        BattleEvent::RoundResult((
+            pair_id,
+            losses[0],
+            losses[1],
+            moves[0].clone(),
+            moves[1].clone(),
+        )),
+        0,
+    )
+    .expect("Error in sending a message `TmgEvent::RoundResult`");
+}
+
+fn reply_move_made() {
+    msg::reply(BattleEvent::MoveMade, 0).expect("Error in sending a reply `BattleEvent::MoveMade`");
+}
+
+fn send_delayed_msg_from_rsv(
+    reservation_id: ReservationId,
+    pair_id: PairId,
+    tmg_id: &ActorId,
+) -> MessageId {
+    msg::send_delayed_from_reservation(
+        reservation_id,
+        exec::program_id(),
+        BattleAction::CheckIfMoveMade {
+            pair_id: pair_id as u8,
+            tmg_id: Some(*tmg_id),
+        },
+        0,
+        TIME_FOR_MOVE + 1,
+    )
+    .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`")
+}
+
+fn send_delayed_msg_with_gas(pair_id: PairId) -> MessageId {
+    msg::send_with_gas_delayed(
+        exec::program_id(),
+        BattleAction::CheckIfMoveMade {
+            pair_id,
+            tmg_id: None,
+        },
+        GAS_AMOUNT,
+        0,
+        TIME_FOR_MOVE + 1,
+    )
+    .expect("Error in sending a delayed message `BattleAction::CheckIfModeMade`")
 }

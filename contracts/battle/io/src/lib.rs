@@ -20,6 +20,7 @@ pub struct Battle {
     pub admin: ActorId,
     pub players: BTreeMap<ActorId, Player>,
     pub players_ids: Vec<ActorId>,
+    pub current_players: Vec<ActorId>,
     pub state: BattleState,
     pub current_winner: ActorId,
     pub pairs: BTreeMap<PairId, Pair>,
