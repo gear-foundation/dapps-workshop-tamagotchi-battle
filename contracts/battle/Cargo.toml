@@ -8,7 +8,7 @@ gstd = { git = "https://github.com/gear-tech/gear.git",features = ["debug"], bra
 parity-scale-codec = { version = "3", default-features = false }
 battle-io = { path = "io" }
 tmg-io = { path = "../tamagotchi/io" }
-scale-info = { version = "2.0.1", default-features = false, features = ["derive"] }
+scale-info = { version = "2", default-features = false }
 hex-literal = "0.3.4"
 
 [build-dependencies]
