@@ -84,7 +84,7 @@ pub enum BattleAction {
         tmg_move: Move,
     },
     StartBattle,
-    UpdateAdmin(ActorId),
+    AddAdmin(ActorId),
     CheckIfMoveMade {
         pair_id: PairId,
         tmg_id: Option<TamagotchiId>,
@@ -103,5 +103,5 @@ pub enum BattleEvent {
     BattleStarted,
     RoundResult((PairId, u16, u16, Option<Move>, Option<Move>)),
     NewRound,
-    AdminUpdated,
+    AdminAdded,
 }

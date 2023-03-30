@@ -7,7 +7,7 @@ edition = "2021"
 gstd = { git = "https://github.com/gear-tech/gear.git",features = ["debug"], branch = "testnet" }
 parity-scale-codec = { version = "3", default-features = false }
 battle-io = { path = "io" }
-tmg-io = { path = "../tamagotchi/io" }
+tmg-io = {  git = "https://github.com/gear-dapps/workshop-tamagotchi" }
 scale-info = { version = "2", default-features = false }
 hex-literal = "0.3.4"
 

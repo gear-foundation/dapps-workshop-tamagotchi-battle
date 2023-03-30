@@ -2,7 +2,7 @@
 
 use battle_io::*;
 use gstd::{debug, exec, msg, prelude::*, ActorId, MessageId, ReservationId};
-use tmg_io::{TmgAction, TmgEvent};
+use tmg_io::{TmgAction, TmgReply};
 const MAX_POWER: u16 = 10_000;
 const MAX_RANGE: u16 = 7_000;
 const MIN_RANGE: u16 = 3_000;
@@ -17,7 +17,7 @@ const RESERVATION_DURATION: u32 = 86_400;
 
 #[derive(Default, Encode, Decode, TypeInfo)]
 pub struct Battle {
-    pub admin: ActorId,
+    pub admins: Vec<ActorId>,
     pub players: BTreeMap<ActorId, Player>,
     pub players_ids: Vec<ActorId>,
     pub current_players: Vec<ActorId>,
@@ -115,7 +115,9 @@ impl Battle {
             "At least 2 players must be in the game"
         );
 
-        assert_eq!(self.admin, msg::source(), "Only admin can start the battle");
+        if !self.admins.contains(&msg::source()) {
+            panic!("Only admin can start the battle");
+        }
 
         // Clear the state if the state is `BattleState::WaitNextRound`
         self.pairs = BTreeMap::new();
@@ -226,7 +228,7 @@ impl Battle {
     fn check_if_move_made(&mut self, pair_id: PairId, tmg_id: Option<TamagotchiId>) {
         debug!("Delayed message");
         assert!(
-            msg::source() == exec::program_id() || msg::source() == self.admin,
+            msg::source() == exec::program_id() || self.admins.contains(&msg::source()),
             "Only program or admin can send this message"
         );
         let pair = self.pairs.get(&pair_id).expect("Pair does not exist");
@@ -302,7 +304,7 @@ impl Battle {
                 }
             }
 
-            send_round_result(&self.admin, pair_id, &losses, &moves);
+            send_round_result(&self.admins[0], pair_id, &losses, &moves);
 
             reply_move_made();
             return;
@@ -386,21 +388,19 @@ impl Battle {
             }
 
             debug!("GAS  {:?}", exec::gas_available());
-            send_round_result(&self.admin, pair_id, &[loss_0, loss_1], &moves);
+            send_round_result(&self.admins[0], pair_id, &[loss_0, loss_1], &moves);
         }
         pair.move_deadline = exec::block_timestamp() + (TIME_FOR_MOVE * 1_000) as u64;
         pair.game_is_over
     }
 
-    fn update_admin(&mut self, new_admin: &ActorId) {
-        assert_eq!(
-            self.admin,
-            msg::source(),
-            "Only admin can update the contract admin"
-        );
-        self.admin = *new_admin;
-        msg::reply(BattleEvent::AdminUpdated, 0)
-            .expect("Error during a reply `BattleEvent::AdminUpdated");
+    fn add_admin(&mut self, new_admin: &ActorId) {
+        if !self.admins.contains(new_admin) {
+            panic!("Only admin can add another admin");
+        }
+        self.admins.push(*new_admin);
+        msg::reply(BattleEvent::AdminAdded, 0)
+            .expect("Error during a reply `BattleEvent::AdminAdded");
     }
 }
 
@@ -413,7 +413,7 @@ async fn main() {
         BattleAction::Register { tmg_id } => battle.register(&tmg_id).await,
         BattleAction::MakeMove { pair_id, tmg_move } => battle.make_move(pair_id, tmg_move),
         BattleAction::StartBattle => battle.start_battle(),
-        BattleAction::UpdateAdmin(new_admin) => battle.update_admin(&new_admin),
+        BattleAction::AddAdmin(new_admin) => battle.add_admin(&new_admin),
         BattleAction::CheckIfMoveMade { pair_id, tmg_id } => {
             battle.check_if_move_made(pair_id, tmg_id)
         }
@@ -423,18 +423,18 @@ async fn main() {
 #[no_mangle]
 unsafe extern "C" fn init() {
     let battle = Battle {
-        admin: msg::source(),
+        admins: vec![msg::source()],
         ..Default::default()
     };
     BATTLE = Some(battle);
 }
 
 pub async fn get_tmg_info(tmg_id: &ActorId) -> (ActorId, String, u64) {
-    let reply: TmgEvent = msg::send_for_reply_as(*tmg_id, TmgAction::TmgInfo, 0)
+    let reply: TmgReply = msg::send_for_reply_as(*tmg_id, TmgAction::TmgInfo, 0)
         .expect("Error in sending a message `TmgAction::TmgInfo")
         .await
-        .expect("Unable to decode TmgEvent");
-    if let TmgEvent::TmgInfo {
+        .expect("Unable to decode TmgReply");
+    if let TmgReply::TmgInfo {
         owner,
         name,
         date_of_birth,

@@ -3,7 +3,7 @@ use gclient::{EventListener, EventProcessor, GearApi, Result, WSAddress};
 use battle_io::*;
 use fmt::Debug;
 use gstd::{prelude::*, ActorId};
-use tmg_io::*;
+
 const PATHS: [&str; 2] = [
     "../target/wasm32-unknown-unknown/release/tmg.opt.wasm",
     "../target/wasm32-unknown-unknown/release/battle.opt.wasm",
@@ -13,8 +13,7 @@ const META_WASM: &str = "../target/wasm32-unknown-unknown/release/battle_state.m
 pub const PLAYERS: &[&str] = &[
     "//John", "//Mike", "//Dan", "//Bot", "//Jack", "//Mops", "//Alex",
 ];
-const BATTLE_ADDRESS: [u8; 32] =
-    hex_literal::hex!("95a93fefed36f7efba9d03211df635b680baf99c62c3cb9e1ceb16f8b87ff33e");
+
 fn decode<T: Decode>(payload: Vec<u8>) -> Result<T> {
     Ok(T::decode(&mut payload.as_slice())?)
 }
