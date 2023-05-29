@@ -1,4 +1,4 @@
-use gclient::{EventListener, EventProcessor, GearApi, Result, WSAddress};
+use gclient::{EventListener, EventProcessor, GearApi, Result};
 
 use battle_io::*;
 use fmt::Debug;
@@ -55,7 +55,7 @@ async fn common_upload_program(
     let (message_id, program_id, _) = client
         .upload_program(
             code,
-            gclient::now_in_micros().to_le_bytes(),
+            gclient::now_micros().to_le_bytes(),
             payload,
             gas_limit,
             0,
@@ -86,21 +86,9 @@ async fn send_message<T: Decode>(
     listener: &mut EventListener,
     destination: [u8; 32],
     payload: impl Encode + Debug,
-    increase_gas: bool,
+    _increase_gas: bool,
 ) -> Result<Result<T, String>> {
-    let encoded_payload = payload.encode();
     let destination = destination.into();
-
-    let gas_limit = client
-        .calculate_handle_gas(None, destination, encoded_payload, 0, true)
-        .await?
-        .min_limit;
-
-    let modified_gas_limit = if increase_gas {
-        gas_limit + (gas_limit * 50) / 100
-    } else {
-        gas_limit
-    };
 
     println!("Sending a payload: `{payload:?}`.");
 

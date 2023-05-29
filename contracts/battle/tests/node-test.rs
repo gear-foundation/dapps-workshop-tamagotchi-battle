@@ -10,14 +10,6 @@ const PATHS: [&str; 2] = [
 ];
 const META_WASM: &str = "../target/wasm32-unknown-unknown/release/battle_state.meta.wasm";
 const PLAYERS_LEN: u8 = 3;
-const ADDRESS: [u8; 32] =
-    hex_literal::hex!("ee141cedb40d043e68f2b9a76992eca562bcd6c4c89870fbba0bcfd44ae9167d");
-const TMGS: [&str; 4] = [
-    "b0f17182f598aadc2377e3744d7894ad31db06a0b906cce398643671b05e5503",
-    "d608b5a451112eb6850bb40562164e0dd0acda112242c961294e80cd79660e58",
-    "3a3e09e619556cd27dbaae55f9f343269a97c430a1a592e4c6df27ded4de266c",
-    "3a3e09e619556cd27dbaae55f9f343269a97c430a1a592e4c6df27ded4de266c",
-];
 
 const BATTLE_ADDRESS: [u8; 32] =
     hex_literal::hex!("95a93fefed36f7efba9d03211df635b680baf99c62c3cb9e1ceb16f8b87ff33e");
@@ -38,7 +30,7 @@ async fn common_upload_program(
     let (message_id, program_id, _) = client
         .upload_program(
             code,
-            gclient::now_in_micros().to_le_bytes(),
+            gclient::now_micros().to_le_bytes(),
             payload,
             gas_limit,
             0,
@@ -170,7 +162,7 @@ async fn battle() -> Result<()> {
     let mut player_0 = round.tmg_ids[0];
     let mut player_1 = round.tmg_ids[1];
 
-    while (true) {
+    loop {
         let (power_0, health_0) = get_power_and_health(&client, battle_id, &player_0).await;
         let (power_1, health_1) = get_power_and_health(&client, battle_id, &player_1).await;
 
