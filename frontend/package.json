@@ -1,5 +1,6 @@
 {
-  "name": "gear-tamagotchi",
+  "name": "gear-tamagotchi-battle",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
