@@ -2,12 +2,12 @@ import { useCallback, useRef, useState } from 'react';
 import { useRefDimensions } from '../../hooks';
 import { motion, useAnimation } from 'framer-motion';
 import { SpriteIcon } from 'components/ui/sprite-icon';
-import clsx from 'clsx';
 import { useBattle } from '../../context';
 import { BattleStatePlayer } from '../../types/battles';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { withoutCommas } from '@gear-js/react-hooks';
+import { cn } from 'app/utils';
 
 export const BattleTableChampions = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -56,9 +56,9 @@ export const BattleTableChampions = () => {
           className="inline-flex self-start my-10 px-2.5 py-8 btn--error bg-tertiary rounded-l-[6px]"
           onClick={onClick}>
           <span className="flex items-center gap-2.5 vertical-lr -rotate-180">
-            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', !isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={cn('w-4 h-4 text-white', !isActive && 'rotate-180')} />
             <span className="font-kanit font-semibold uppercase tracking-[0.04em]">Show champions</span>
-            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', !isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={cn('w-4 h-4 text-white', !isActive && 'rotate-180')} />
           </span>
         </button>
 
@@ -121,7 +121,7 @@ const BattleTablePairsRow = ({ player, position }: { player: BattleStatePlayer; 
   const victories = +withoutCommas(player.victories);
   return (
     <div
-      className={clsx(
+      className={cn(
         'flex items-center gap-4 w-full py-1 px-4 rounded-[30px] overflow-hidden',
         victories > 0 && position < 3 ? 'bg-gradient-to-b from-tertiary to-transparent' : 'bg-white/10',
       )}>

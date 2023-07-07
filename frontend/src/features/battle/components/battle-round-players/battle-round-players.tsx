@@ -1,11 +1,11 @@
 import { useBattle } from '../../context';
-import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattleMessage } from '../../hooks';
 import { useEffect, useState } from 'react';
 import { useAccount, withoutCommas } from '@gear-js/react-hooks';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
+import { cn } from 'app/utils';
 
 export const BattleRoundPlayers = () => {
   const { account } = useAccount();
@@ -77,7 +77,7 @@ export const BattleRoundPlayers = () => {
             <div className="space-y-2 xxl:space-y-3">
               {battle.state === 'WaitNextRound' && isAdmin && (
                 <button
-                  className={clsx(
+                  className={cn(
                     'relative btn items-center gap-2 w-full transition-colors',
                     'before:absolute before:-inset-1 before:border before:border-primary/50 before:rounded-[90px] before:animate-wave-2',
                     'after:absolute after:-inset-2 after:border after:border-primary/30 after:rounded-[90px] after:animate-wave',
@@ -92,7 +92,7 @@ export const BattleRoundPlayers = () => {
               {battle.state === 'GameIsOn' && !battle.pairs[currentPairIdx].gameIsOver && (
                 <>
                   <button
-                    className={clsx(
+                    className={cn(
                       'btn btn--error items-center gap-2 w-full bg-error text-white transition-colors',
                       buttonStyles.button,
                     )}
@@ -101,7 +101,7 @@ export const BattleRoundPlayers = () => {
                     <SpriteIcon name="swords" className="w-5 h-5" /> Attack
                   </button>
                   <button
-                    className={clsx('btn items-center gap-2 w-full', buttonStyles.secondary, buttonStyles.button)}
+                    className={cn('btn items-center gap-2 w-full', buttonStyles.secondary, buttonStyles.button)}
                     onClick={onDefence}
                     disabled={isPending || !isAllowed}>
                     <SpriteIcon name="armor" className="w-5 h-5" /> Defence

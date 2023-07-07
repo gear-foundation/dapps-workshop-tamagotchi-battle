@@ -1,9 +1,9 @@
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
-import clsx from 'clsx';
-import { SpriteIcon } from '../../../../components/ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import type { BattleStatePlayer } from '../../types/battles';
 import { TooltipWrapper } from '@gear-js/ui';
 import { withoutCommas } from '@gear-js/react-hooks';
+import { cn } from 'app/utils';
 
 type TamagotchiQueueCardProps = {
   className?: string;
@@ -17,7 +17,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'relative grid justify-center pt-3 pb-4 xxl:py-4 px-4 xxl:px-5',
         asPlayer ? 'w-33 xxl:w-40 smh:gap-1 gap-1.5 xxl:gap-4' : 'gap-1 xxl:gap-2 w-full bg-[#29292B] rounded-2xl',
         className,
@@ -25,7 +25,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
       )}>
       {asPlayer && (
         <div
-          className={clsx(
+          className={cn(
             'absolute inset-x-0 -top-4 xxl:-top-7 -bottom-2 -z-1 w-full card-mask overflow-visible',
             'bg-gradient-to-b to-transparent',
             isActive ? 'from-[#16B768]' : 'from-theme-blue',
@@ -48,7 +48,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
         />
       </div>
       <h3
-        className={clsx(
+        className={cn(
           'flex justify-center text-center tracking-[0.03em] font-medium',
           asPlayer ? 'text-lg leading-7' : 'text-sm',
         )}>
@@ -57,7 +57,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
         </TooltipWrapper>
       </h3>
       <div
-        className={clsx('relative w-full xxl:w-30 px-4 rounded-xl overflow-hidden', dead ? 'bg-error' : 'bg-white/10')}>
+        className={cn('relative w-full xxl:w-30 px-4 rounded-xl overflow-hidden', dead ? 'bg-error' : 'bg-white/10')}>
         {!dead && (
           <div
             className="absolute inset-0 rounded-xl bg-primary"

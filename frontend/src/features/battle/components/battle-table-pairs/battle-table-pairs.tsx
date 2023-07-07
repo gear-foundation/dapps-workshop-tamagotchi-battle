@@ -2,11 +2,11 @@ import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattle } from '../../context';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BattleStatePair, BattleStatePlayer } from '../../types/battles';
-import clsx from 'clsx';
 import { useAnimation, motion } from 'framer-motion';
 import { useRefDimensions } from '../../hooks';
 import { nanoid } from 'nanoid';
 import { ScrollArea } from 'components/ui/scroll-area';
+import { cn } from 'app/utils';
 
 type PairData = { players: BattleStatePlayer[]; pair: BattleStatePair; id: string; idx: number };
 
@@ -76,9 +76,9 @@ export const BattleTablePairs = () => {
           className="inline-flex self-start my-10 px-2.5 py-8 btn--primary bg-primary rounded-r-[6px]"
           onClick={onClick}>
           <span className="flex items-center gap-2.5 vertical-rl -rotate-180">
-            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={cn('w-4 h-4 text-white', isActive && 'rotate-180')} />
             <span className="font-kanit font-semibold uppercase tracking-[0.04em]">Show battles</span>
-            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={cn('w-4 h-4 text-white', isActive && 'rotate-180')} />
           </span>
         </button>
       </motion.div>
@@ -152,20 +152,20 @@ const BattleTablePairsRow = ({ data: { pair, players, idx }, isActive }: { data:
   const { setCurrentPairIdx } = useBattle();
   return (
     <button
-      className={clsx(
+      className={cn(
         'flex items-center gap-2 w-full py-1 pr-2 pl-4 bg-gradient-to-b to-transparent transition-colors rounded-[30px] overflow-hidden',
         isActive ? 'from-primary hover:bg-primary/15' : 'from-white/15 hover:bg-white/15',
       )}
       onClick={() => setCurrentPairIdx(idx)}>
       <span
-        className={clsx(
+        className={cn(
           'w-2 h-2 rounded-full',
           pair.gameIsOver ? 'bg-error' : 'bg-primary shadow-[0_0_10px] shadow-primary',
         )}
       />
       <span className="flex items-center gap-3 text-[12px] leading-[18px]">
         <span
-          className={clsx(
+          className={cn(
             'w-20 truncate text-right',
             pair.gameIsOver ? (pair.winner === players[0].tmgId ? 'text-primary' : 'text-error') : '',
           )}>
@@ -173,7 +173,7 @@ const BattleTablePairsRow = ({ data: { pair, players, idx }, isActive }: { data:
         </span>
         <SpriteIcon name="swords" className="w-3.5 h-3.5" />
         <span
-          className={clsx(
+          className={cn(
             'w-20 truncate text-left',
             pair.gameIsOver ? (pair.winner === players[1].tmgId ? 'text-primary' : 'text-error') : '',
           )}>

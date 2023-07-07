@@ -1,10 +1,10 @@
-import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { decodeAddress } from '@gear-js/api';
 import { copyToClipboard } from '../utils';
 import { useAlert } from '@gear-js/react-hooks';
 import { lazy } from 'react';
+import { cn } from "app/utils";
 
 const Identicon = lazy(() => import('@polkadot/react-identicon'));
 
@@ -25,7 +25,7 @@ export function WalletAccount({ address, name, onClick, isActive, simple }: Prop
   return (
     <div className="flex items-center gap-4">
       <button
-        className={clsx(
+        className={cn(
           'grow btn gap-2 !justify-start ',
           simple ? 'items-center' : '!grid grid-cols-[20px_1fr_20px]',
           isActive ? buttonStyles.primary : buttonStyles.light,

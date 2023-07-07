@@ -4,12 +4,12 @@ import { HexString } from '@polkadot/util/types';
 import { PlayerColor } from '../features/battle/types/battles';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BattleRoundStatsAvatar } from 'features/battle/components/battle-round-stats-avatar';
-import clsx from 'clsx';
 import { TamagotchiAvatar } from '../features/battle/components/tamagotchi-avatar';
 import { buttonStyles } from '@gear-js/ui';
 import { BattlePlayersQueue } from '../features/battle/components/battle-players-queue';
 import { TamagotchiQueueCard } from '../features/battle/components/tamagotchi-queue-card';
 import { withoutCommas } from '@gear-js/react-hooks';
+import { cn } from 'app/utils';
 
 const rivals = [
   {
@@ -129,7 +129,7 @@ export const Test = () => {
                       <div className="space-y-2 xxl:space-y-3">
                         {false && (
                           <button
-                            className={clsx(
+                            className={cn(
                               'btn items-center gap-2 w-full transition-colors',
                               buttonStyles.primary,
                               buttonStyles.button,
@@ -140,14 +140,14 @@ export const Test = () => {
                         {true && (
                           <>
                             <button
-                              className={clsx(
+                              className={cn(
                                 'btn btn--error items-center gap-2 w-full bg-error text-white transition-colors',
                                 buttonStyles.button,
                               )}>
                               <SpriteIcon name="swords" className="w-5 h-5" /> Attack
                             </button>
                             <button
-                              className={clsx(
+                              className={cn(
                                 'btn items-center gap-2 w-full',
                                 buttonStyles.secondary,
                                 buttonStyles.button,
@@ -242,12 +242,12 @@ export const Test = () => {
 };
 
 const BattleTurnArrows = ({ isReverse }: { isReverse: boolean }) => {
-  const cn = 'smh:w-6 w-7.5 xxl:w-10 aspect-[1/2] text-white';
+  const cx = 'smh:w-6 w-7.5 xxl:w-10 aspect-[1/2] text-white';
   return (
-    <div className={clsx('relative flex', isReverse && 'rotate-180')}>
-      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-1')} />
-      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-2')} />
-      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-3')} />
+    <div className={cn('relative flex', isReverse && 'rotate-180')}>
+      <SpriteIcon name="battle-next-step" className={cn(cx, 'animate-battle-turn-1')} />
+      <SpriteIcon name="battle-next-step" className={cn(cx, 'animate-battle-turn-2')} />
+      <SpriteIcon name="battle-next-step" className={cn(cx, 'animate-battle-turn-3')} />
     </div>
   );
 };

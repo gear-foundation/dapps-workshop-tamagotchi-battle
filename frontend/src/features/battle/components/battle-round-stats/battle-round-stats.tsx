@@ -1,9 +1,9 @@
-import clsx from 'clsx';
 import { BattleRoundStatsAvatar } from '../battle-round-stats-avatar';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattle } from '../../context';
 import { Countdown } from './counter';
 import { motion } from 'framer-motion';
+import { cn } from 'app/utils';
 
 export const BattleRoundStats = () => {
   const { rivals, currentPlayer, battle, currentPairIdx } = useBattle();
@@ -35,12 +35,12 @@ export const BattleRoundStats = () => {
 };
 
 const BattleTurnArrows = ({ isReverse }: { isReverse: boolean }) => {
-  const cn = 'smh:w-6 w-7.5 xxl:w-10 aspect-[1/2] text-white';
+  const cx = 'smh:w-6 w-7.5 xxl:w-10 aspect-[1/2] text-white';
   return (
-    <div className={clsx('relative flex', isReverse && 'rotate-180')}>
-      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-1')} />
-      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-2')} />
-      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-3')} />
+    <div className={cn('relative flex', isReverse && 'rotate-180')}>
+      <SpriteIcon name="battle-next-step" className={cn(cx, 'animate-battle-turn-1')} />
+      <SpriteIcon name="battle-next-step" className={cn(cx, 'animate-battle-turn-2')} />
+      <SpriteIcon name="battle-next-step" className={cn(cx, 'animate-battle-turn-3')} />
     </div>
   );
 };

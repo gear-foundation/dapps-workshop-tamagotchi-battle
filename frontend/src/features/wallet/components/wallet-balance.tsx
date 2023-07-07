@@ -1,6 +1,6 @@
 import { Account } from '@gear-js/react-hooks';
 import { Button, buttonStyles, TooltipWrapper } from '@gear-js/ui';
-import clsx from 'clsx';
+import { cn } from "app/utils";
 import { SpriteIcon } from 'components/ui/sprite-icon';
 
 type Props = {
@@ -16,7 +16,7 @@ export function WalletBalance({ balance, address, name, onClick }: Props) {
       <div>
         <TooltipWrapper text="Account gas balance">
           <Button
-            className={clsx('group !p-2.5', buttonStyles.lightGreen)}
+            className={cn('group !p-2.5', buttonStyles.lightGreen)}
             icon={() => (
               <>
                 <SpriteIcon name="test-balance" width={20} height={20} />

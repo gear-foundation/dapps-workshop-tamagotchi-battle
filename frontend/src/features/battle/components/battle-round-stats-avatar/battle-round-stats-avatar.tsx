@@ -1,10 +1,10 @@
-import clsx from 'clsx';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import { BattleStatePlayer } from '../../types/battles';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { withoutCommas } from '@gear-js/react-hooks';
+import { cn } from 'app/utils';
 
 type Props = {
   tamagotchi: BattleStatePlayer;
@@ -24,10 +24,10 @@ export const BattleRoundStatsAvatar = ({ tamagotchi, isReverse }: Props) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: isReverse ? 100 : -100 }}
       transition={{ duration: 0.5 }}
-      className={clsx('basis-[40%] flex gap-6 items-center', isReverse && 'flex-row-reverse')}>
+      className={cn('basis-[40%] flex gap-6 items-center', isReverse && 'flex-row-reverse')}>
       <div className="relative flex flex-col items-center w-fit">
         <div
-          className={clsx(
+          className={cn(
             'relative w-15 xxl:w-24 aspect-square rounded-full overflow-hidden ring-2 ring-opacity-50',
             dead ? 'bg-error ring-error' : 'bg-white ring-white',
           )}>
@@ -50,10 +50,10 @@ export const BattleRoundStatsAvatar = ({ tamagotchi, isReverse }: Props) => {
         </div>
       </div>
       <div className="w-full max-w-[300px] space-y-3">
-        <div className={clsx('relative py-0.5 px-4 rounded-xl overflow-hidden', dead ? 'bg-error' : 'bg-white/10')}>
+        <div className={cn('relative py-0.5 px-4 rounded-xl overflow-hidden', dead ? 'bg-error' : 'bg-white/10')}>
           {!dead && (
             <div
-              className={clsx(
+              className={cn(
                 'absolute inset-y-0 w-full rounded-xl bg-primary transition-[width]',
                 isReverse ? 'right-0' : 'left-0',
               )}
@@ -67,7 +67,7 @@ export const BattleRoundStatsAvatar = ({ tamagotchi, isReverse }: Props) => {
             </span>
           </div>
         </div>
-        <div className={clsx('flex gap-3 tracking-[0.03em]', isReverse && 'flex-row-reverse')}>
+        <div className={cn('flex gap-3 tracking-[0.03em]', isReverse && 'flex-row-reverse')}>
           <div className="relative z-1 flex gap-1.5 items-center font-medium font-kanit text-xs leading-5 bg-white/10 py-0.5 px-4 rounded-xl">
             <SpriteIcon name="armor" className="w-3 xxl:w-3.5 aspect-square" />
             <b className="font-bold">{Math.round(+withoutCommas(tamagotchi.defence) / 100)}</b> Armor
