@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './home';
 import { Battle } from './battle';
-import { useInitBattleData } from 'app/hooks/use-battle';
+import { useInitBattleData } from '../features/battle/hooks/use-battle';
 import { Test } from './test';
-import { ROUTES } from "../app/consts";
+import { ROUTES } from '../app/consts';
 
 const routes = [
   { path: ROUTES.HOME, Page: Home },

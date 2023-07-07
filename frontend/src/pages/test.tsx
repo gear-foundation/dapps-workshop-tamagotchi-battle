@@ -1,14 +1,14 @@
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useState } from 'react';
 import { HexString } from '@polkadot/util/types';
-import { PlayerColor } from '../app/types/battles';
+import { PlayerColor } from '../features/battle/types/battles';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BattleRoundStatsAvatar } from 'components/sections/battle-round-stats-avatar';
+import { BattleRoundStatsAvatar } from 'features/battle/components/battle-round-stats-avatar';
 import clsx from 'clsx';
-import { TamagotchiAvatar } from '../components/common/tamagotchi-avatar';
+import { TamagotchiAvatar } from '../features/battle/components/tamagotchi-avatar';
 import { buttonStyles } from '@gear-js/ui';
-import { BattlePlayersQueue } from '../components/sections/battle-players-queue';
-import { TamagotchiQueueCard } from '../components/cards/tamagotchi-queue-card';
+import { BattlePlayersQueue } from '../features/battle/components/battle-players-queue';
+import { TamagotchiQueueCard } from '../features/battle/components/tamagotchi-queue-card';
 
 const rivals = [
   {
