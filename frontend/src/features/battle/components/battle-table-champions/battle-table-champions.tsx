@@ -1,12 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
-import { useRefDimensions } from '../../hooks/use-ref-dimensions';
+import { useRefDimensions } from '../../hooks';
 import { motion, useAnimation } from 'framer-motion';
-import { SpriteIcon } from '../../../../components/ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import clsx from 'clsx';
 import { useBattle } from '../../context';
 import { BattleStatePlayer } from '../../types/battles';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
-import { ScrollArea } from '../../../../components/ui/scroll-area';
+import { ScrollArea } from 'components/ui/scroll-area';
+import { withoutCommas } from '@gear-js/react-hooks';
 
 export const BattleTableChampions = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -105,7 +106,7 @@ const BattleTableList = () => {
     <ScrollArea className="max-h-80 pr-3 -mr-3">
       <ul className="leading-4 space-y-1.5">
         {players
-          .sort((p, c) => c.victories - p.victories)
+          .sort((p, c) => +withoutCommas(c.victories) - +withoutCommas(p.victories))
           .map((player, i) => (
             <li key={i}>
               <BattleTablePairsRow player={player} position={i} />
@@ -117,15 +118,16 @@ const BattleTableList = () => {
 };
 
 const BattleTablePairsRow = ({ player, position }: { player: BattleStatePlayer; position: number }) => {
+  const victories = +withoutCommas(player.victories);
   return (
     <div
       className={clsx(
         'flex items-center gap-4 w-full py-1 px-4 rounded-[30px] overflow-hidden',
-        player.victories > 0 && position < 3 ? 'bg-gradient-to-b from-tertiary to-transparent' : 'bg-white/10',
+        victories > 0 && position < 3 ? 'bg-gradient-to-b from-tertiary to-transparent' : 'bg-white/10',
       )}>
       <SpriteIcon
         name={
-          player.victories > 0
+          victories > 0
             ? position === 0
               ? 'wins'
               : position === 1
@@ -140,14 +142,14 @@ const BattleTablePairsRow = ({ player, position }: { player: BattleStatePlayer; 
       <div className="relative w-10 aspect-square rounded-full overflow-hidden ring-4 ring-opacity-10 bg-white ring-white">
         <TamagotchiAvatar
           className="w-20 aspect-square -left-1/2 pointer-events-none"
-          age={player.dateOfBirth}
+          age={+withoutCommas(player.dateOfBirth)}
           color={player.color}
         />
       </div>
       <div className="flex items-center gap-3 tracking-[0.03em] font-medium">
         <span className="w-20 truncate">{player.name}</span>
       </div>
-      <p className="ml-auto text-2xl leading-none font-kanit font-medium w-7 text-center">{player.victories}</p>
+      <p className="ml-auto text-2xl leading-none font-kanit font-medium w-7 text-center">{victories}</p>
     </div>
   );
 };

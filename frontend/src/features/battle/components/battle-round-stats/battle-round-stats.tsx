@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { BattleRoundStatsAvatar } from '../battle-round-stats-avatar';
-import { SpriteIcon } from '../../../../components/ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattle } from '../../context';
 import { Countdown } from './counter';
 import { motion } from 'framer-motion';

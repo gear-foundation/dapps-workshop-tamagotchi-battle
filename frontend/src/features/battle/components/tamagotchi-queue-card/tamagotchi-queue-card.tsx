@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { SpriteIcon } from '../../../../components/ui/sprite-icon';
 import type { BattleStatePlayer } from '../../types/battles';
 import { TooltipWrapper } from '@gear-js/ui';
+import { withoutCommas } from '@gear-js/react-hooks';
 
 type TamagotchiQueueCardProps = {
   className?: string;
@@ -12,7 +13,7 @@ type TamagotchiQueueCardProps = {
 };
 
 export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive }: TamagotchiQueueCardProps) => {
-  const dead = !tamagotchi.health;
+  const dead = !+withoutCommas(tamagotchi.health);
 
   return (
     <div
@@ -41,7 +42,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
       <div className="relative w-14 xxl:w-24 aspect-square m-auto rounded-full overflow-hidden bg-white ring-white ring-4 ring-opacity-10">
         <TamagotchiAvatar
           className="w-28 xxl:w-48 aspect-square -left-1/2"
-          age={tamagotchi.dateOfBirth}
+          age={+withoutCommas(tamagotchi.dateOfBirth)}
           color={tamagotchi.color}
           isDead={dead}
         />
@@ -58,11 +59,16 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
       <div
         className={clsx('relative w-full xxl:w-30 px-4 rounded-xl overflow-hidden', dead ? 'bg-error' : 'bg-white/10')}>
         {!dead && (
-          <div className="absolute inset-0 rounded-xl bg-primary" style={{ width: `${tamagotchi.health / 25}%` }} />
+          <div
+            className="absolute inset-0 rounded-xl bg-primary"
+            style={{ width: `${+withoutCommas(tamagotchi.health) / 25}%` }}
+          />
         )}
         <div className="relative flex gap-1 items-center justify-center">
           <SpriteIcon name="health" className="w-3 xxl:w-3.5 aspect-square" />
-          <span className="font-kanit text-xs font-medium leading-5">{Math.round(tamagotchi.health / 25)} / 100</span>
+          <span className="font-kanit text-xs font-medium leading-5">
+            {Math.round(+withoutCommas(tamagotchi.health) / 25)} / 100
+          </span>
         </div>
       </div>
     </div>

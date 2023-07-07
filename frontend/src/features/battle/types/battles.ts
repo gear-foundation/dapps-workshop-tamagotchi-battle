@@ -2,49 +2,36 @@ import { HexString } from '@polkadot/util/types';
 
 export type TamagotchiColor = 'Green' | 'Red' | 'Blue' | 'Purple' | 'Orange' | 'Yellow';
 export type PlayerColor = TamagotchiColor;
-
-export type BattlePlayerType = {
-  attributes: number[];
-  color: TamagotchiColor;
-  defence: number;
-  health: number;
-  power: number;
-  owner: HexString;
-  tmgId: HexString;
-  name: string;
-  dateOfBirth: number;
-};
-
 export type BattleCurrentStateVariants = 'Registration' | 'GameIsOn' | 'WaitNextRound' | 'GameIsOver';
 export type BattleRoundMoveVariants = 'Defence' | 'Attack' | 'Skipped';
 
-export type RoundDamageType = [number, number, number, BattleRoundMoveVariants, BattleRoundMoveVariants];
+export type RoundDamageType = [string, string, string, BattleRoundMoveVariants, BattleRoundMoveVariants];
 
 export type BattleStatePair = {
   gameIsOver: boolean;
-  moveDeadline: number;
+  moveDeadline: string;
   moves: [];
   ownerIds: HexString[];
-  rounds: number;
+  rounds: string;
   tmgIds: HexString[];
   winner: HexString;
 };
 
 export type BattleStatePlayer = {
   color: PlayerColor;
-  dateOfBirth: number;
-  defence: number;
-  health: number;
+  dateOfBirth: string;
+  defence: string;
+  health: string;
   name: string;
   owner: HexString;
-  power: number;
+  power: string;
   tmgId: HexString;
-  victories: number;
+  victories: string;
 };
 
 export type BattleStateResponse = {
   admins: HexString[];
-  completedGames: number;
+  completedGames: string;
   currentWinner: HexString;
   pairs: Record<string, BattleStatePair>;
   players: Record<HexString, BattleStatePlayer>;

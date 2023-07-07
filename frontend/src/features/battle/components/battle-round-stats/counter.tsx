@@ -3,6 +3,7 @@ import duration from 'dayjs/plugin/duration';
 import { toSeconds } from '../../utils';
 import { useEffect, useRef, useState } from 'react';
 import { useBattle } from '../../context';
+import { withoutCommas } from '@gear-js/react-hooks';
 
 dayjs.extend(duration);
 
@@ -18,7 +19,7 @@ export const Countdown = () => {
             <span className="smh:hidden">Time left</span>
 
             <span className="smh:inline-block hidden">
-              Round: {battle && battle.pairs[currentPairIdx].rounds + 1} <span className="normal-case">of</span> 5
+              Round: {battle && +battle.pairs[currentPairIdx].rounds + 1} <span className="normal-case">of</span> 5
             </span>
           </span>
 
@@ -46,7 +47,7 @@ const usePairCountdown = () => {
     if (battle && battle.pairs[currentPairIdx].moveDeadline) {
       // console.log('mount and update data');
       const now = dayjs();
-      const deadline = dayjs(battle.pairs[currentPairIdx].moveDeadline);
+      const deadline = dayjs(+withoutCommas(battle.pairs[currentPairIdx].moveDeadline));
       // const deadline = now.add(60, 'seconds');
 
       // console.log({

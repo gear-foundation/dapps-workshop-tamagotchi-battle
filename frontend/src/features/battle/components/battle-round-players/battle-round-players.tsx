@@ -4,7 +4,7 @@ import { buttonStyles } from '@gear-js/ui';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattleMessage } from '../../hooks';
 import { useEffect, useState } from 'react';
-import { useAccount } from '@gear-js/react-hooks';
+import { useAccount, withoutCommas } from '@gear-js/react-hooks';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
 
 export const BattleRoundPlayers = () => {
@@ -44,12 +44,12 @@ export const BattleRoundPlayers = () => {
           <div className={cnWrapper}>
             <TamagotchiAvatar
               color={rivals[0].color}
-              age={rivals[0].dateOfBirth}
+              age={+withoutCommas(rivals[0].dateOfBirth)}
               className={cnT}
               isActive={battle.state !== 'WaitNextRound' && rivals[0].tmgId === currentPlayer}
               isWinner={battle.state === 'WaitNextRound' && battle.pairs[currentPairIdx].winner === rivals[0].tmgId}
-              isDead={!rivals[0].health}
-              damage={roundDamage ? Math.round(roundDamage[1] / 25) : 0}
+              isDead={!+withoutCommas(rivals[0].health)}
+              damage={roundDamage ? Math.round(+roundDamage[1] / 25) : 0}
               action={roundDamage && (roundDamage[3] === null ? 'Skipped' : roundDamage[3])}
               asPlayer
             />
@@ -59,7 +59,8 @@ export const BattleRoundPlayers = () => {
               {!battle.pairs[currentPairIdx].gameIsOver ? (
                 <>
                   <p className="smh:hidden font-semibold font-sans uppercase text-[#D2D2D3] text-opacity-60 text-center tracking-[.04em]">
-                    Round: {battle && battle.pairs[currentPairIdx].rounds + 1} <span className="normal-case">of</span> 5
+                    Round: {battle && +battle.pairs[currentPairIdx].rounds + 1} <span className="normal-case">of</span>{' '}
+                    5
                   </p>
                   <p className="smh:text-[26px] text-2xl leading-tight xxl:typo-h2 truncate max-w-[13ch] font-bold">
                     {currentPlayer && battle.players[currentPlayer].name}
@@ -112,12 +113,12 @@ export const BattleRoundPlayers = () => {
           <div className={cnWrapper}>
             <TamagotchiAvatar
               color={rivals[1].color}
-              age={rivals[1].dateOfBirth}
+              age={+withoutCommas(rivals[1].dateOfBirth)}
               className={cnT}
               isActive={battle.state !== 'WaitNextRound' && rivals[1].tmgId === currentPlayer}
               isWinner={battle.state === 'WaitNextRound' && battle.pairs[currentPairIdx].winner === rivals[1].tmgId}
-              isDead={!rivals[1].health}
-              damage={roundDamage ? Math.round(roundDamage[2] / 25) : 0}
+              isDead={!+withoutCommas(rivals[1].health)}
+              damage={roundDamage ? Math.round(+roundDamage[2] / 25) : 0}
               action={roundDamage && (roundDamage[4] === null ? 'Skipped' : roundDamage[4])}
               reverse
               asPlayer

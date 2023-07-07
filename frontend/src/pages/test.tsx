@@ -9,29 +9,30 @@ import { TamagotchiAvatar } from '../features/battle/components/tamagotchi-avata
 import { buttonStyles } from '@gear-js/ui';
 import { BattlePlayersQueue } from '../features/battle/components/battle-players-queue';
 import { TamagotchiQueueCard } from '../features/battle/components/tamagotchi-queue-card';
+import { withoutCommas } from '@gear-js/react-hooks';
 
 const rivals = [
   {
     color: 'Yellow' as PlayerColor,
-    dateOfBirth: new Date().getMilliseconds(),
-    defence: 2500,
-    health: 2500,
+    dateOfBirth: new Date().getMilliseconds().toString(),
+    defence: '2500',
+    health: '2500',
     name: 'John',
     owner: '0x255' as HexString,
-    power: 7500,
+    power: '7500',
     tmgId: '0x123' as HexString,
-    victories: 4,
+    victories: '4',
   },
   {
     color: 'Green' as PlayerColor,
-    dateOfBirth: new Date(new Date().getHours() + 1).getMilliseconds(),
-    defence: 2500,
-    health: 1000,
+    dateOfBirth: new Date(new Date().getHours() + 1).getMilliseconds().toString(),
+    defence: '2500',
+    health: '1000',
     name: 'Alex',
     owner: '0x2556' as HexString,
-    power: 7500,
+    power: '7500',
     tmgId: '0x1234' as HexString,
-    victories: 7,
+    victories: '7',
   },
 ];
 
@@ -91,11 +92,11 @@ export const Test = () => {
                     <div className={cnWrapper}>
                       <TamagotchiAvatar
                         color={rivals[0].color}
-                        age={rivals[0].dateOfBirth}
+                        age={+withoutCommas(rivals[0].dateOfBirth)}
                         className={cnT}
                         isActive={!active}
                         isWinner={false}
-                        isDead={!rivals[0].health}
+                        isDead={!+withoutCommas(rivals[0].health)}
                         damage={10}
                         action={'Skipped'}
                         asPlayer
@@ -160,11 +161,11 @@ export const Test = () => {
                     <div className={cnWrapper}>
                       <TamagotchiAvatar
                         color={rivals[1].color}
-                        age={rivals[1].dateOfBirth}
+                        age={+withoutCommas(rivals[1].dateOfBirth)}
                         className={cnT}
                         isActive={active}
                         isWinner={false}
-                        isDead={!rivals[1].health}
+                        isDead={!+withoutCommas(rivals[1].health)}
                         damage={20}
                         action={'Skipped'}
                         reverse

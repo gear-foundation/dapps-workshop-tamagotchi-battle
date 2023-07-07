@@ -1,12 +1,12 @@
-import { SpriteIcon } from '../../../../components/ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattle } from '../../context';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BattleStatePair, BattleStatePlayer } from '../../types/battles';
 import clsx from 'clsx';
 import { useAnimation, motion } from 'framer-motion';
-import { useRefDimensions } from '../../hooks/use-ref-dimensions';
+import { useRefDimensions } from '../../hooks';
 import { nanoid } from 'nanoid';
-import { ScrollArea } from '../../../../components/ui/scroll-area';
+import { ScrollArea } from 'components/ui/scroll-area';
 
 type PairData = { players: BattleStatePlayer[]; pair: BattleStatePair; id: string; idx: number };
 

@@ -3,6 +3,7 @@ import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import Fireworks, { FireworksHandlers } from '@fireworks-js/react';
 import { useRef } from 'react';
 import { TamagotchiQueueCard } from '../tamagotchi-queue-card';
+import { withoutCommas } from '@gear-js/react-hooks';
 
 export const BattleWinner = ({ battle }: { battle: BattleStateResponse }) => {
   const winner = battle.players[battle.currentWinner];
@@ -25,11 +26,11 @@ export const BattleWinner = ({ battle }: { battle: BattleStateResponse }) => {
             <div className="grow grid max-h-full my-auto h-full">
               <TamagotchiAvatar
                 color={winner.color}
-                age={winner.dateOfBirth}
+                age={+withoutCommas(winner.dateOfBirth)}
                 className="max-w-full"
                 // className="grow h-full mx-auto w-fit max-w-full"
                 isWinner
-                isDead={!winner.health}
+                isDead={!+withoutCommas(winner.health)}
               />
             </div>
           </div>

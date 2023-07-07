@@ -97,7 +97,7 @@ export function useInitBattleData() {
             ) {
               const notification = Object.values(decodedPayload)[0] as RoundDamageType;
 
-              if (currentPairIdx === notification[0]) {
+              if (currentPairIdx === +notification[0]) {
                 // console.log({ decodedPayload });
                 setRoundDamage(notification);
               }
