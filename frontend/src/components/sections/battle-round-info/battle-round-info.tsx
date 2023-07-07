@@ -1,5 +1,5 @@
 import { useBattle } from 'app/context';
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TamagotchiQueueCard } from '../../cards/tamagotchi-queue-card';
 

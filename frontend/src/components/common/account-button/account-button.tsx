@@ -1,7 +1,7 @@
 import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { decodeAddress } from '@gear-js/api';
 import { copyToClipboard } from 'app/utils';
 import { useAlert } from '@gear-js/react-hooks';

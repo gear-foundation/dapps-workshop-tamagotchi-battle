@@ -1,7 +1,7 @@
 import { useApp, useBattle } from 'app/context';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattleMessage } from 'app/hooks/use-battle';
 import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';

@@ -1,4 +1,4 @@
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattle } from 'app/context';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BattleStatePair, BattleStatePlayer } from 'app/types/battles';

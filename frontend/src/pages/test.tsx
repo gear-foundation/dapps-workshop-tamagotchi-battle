@@ -1,9 +1,9 @@
-import { SpriteIcon } from '../components/ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useState } from 'react';
 import { HexString } from '@polkadot/util/types';
 import { PlayerColor } from '../app/types/battles';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BattleRoundStatsAvatar } from '../components/sections/battle-round-stats-avatar';
+import { BattleRoundStatsAvatar } from 'components/sections/battle-round-stats-avatar';
 import clsx from 'clsx';
 import { TamagotchiAvatar } from '../components/common/tamagotchi-avatar';
 import { buttonStyles } from '@gear-js/ui';

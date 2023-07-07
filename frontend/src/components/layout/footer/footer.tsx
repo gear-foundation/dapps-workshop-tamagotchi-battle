@@ -1,4 +1,4 @@
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 
 const socials = [
   { href: 'https://twitter.com/gear_techs', icon: 'twitter' },

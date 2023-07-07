@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { TamagotchiAvatar } from 'components/common/tamagotchi-avatar';
 import { BattleStatePlayer } from 'app/types/battles';
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 

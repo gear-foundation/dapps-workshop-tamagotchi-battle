@@ -1,5 +1,5 @@
 import { TooltipWrapper, Button, buttonStyles } from '@gear-js/ui';
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import clsx from 'clsx';
 
 export const GetGasBalance = () => {

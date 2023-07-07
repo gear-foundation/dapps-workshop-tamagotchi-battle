@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useRefDimensions } from 'app/hooks/use-ref-dimensions';
 import { motion, useAnimation } from 'framer-motion';
-import { SpriteIcon } from '../../ui/sprite-icon';
+import { SpriteIcon } from 'components/ui/sprite-icon';
 import clsx from 'clsx';
 import { useBattle } from 'app/context';
 import { BattleStatePlayer } from 'app/types/battles';
