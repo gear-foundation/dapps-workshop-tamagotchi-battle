@@ -1,14 +1,14 @@
-import { useBattle } from '../context';
 import { useEffect, useRef } from 'react';
-import type { BattleStatePlayer, BattleStateResponse } from '../types/battles';
+import { useNavigate } from 'react-router-dom';
 import { useAccount, useApi, useSendMessage } from '@gear-js/react-hooks';
 import { useProgramMetadata, useReadState } from 'app/hooks/api';
-import meta from '../assets/meta/battle.meta.txt';
-import type { UnsubscribePromise } from '@polkadot/api/types';
-import type { UserMessageSent } from '@gear-js/api';
-import { BattleCurrentStateVariants, RoundDamageType } from '../types/battles';
-import { useNavigate } from 'react-router-dom';
+import { useBattle } from '../context';
 import { BATTLE_ADDRESS } from '../consts';
+import meta from '../assets/meta/battle.meta.txt';
+import type { UserMessageSent } from '@gear-js/api';
+import type { UnsubscribePromise } from '@polkadot/api/types';
+import type { BattleStatePlayer, BattleStateResponse } from '../types/battles';
+import type { BattleCurrentStateVariants, RoundDamageType } from '../types/battles';
 
 const programId = BATTLE_ADDRESS;
 

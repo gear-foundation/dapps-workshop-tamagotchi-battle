@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './home';
 import { Battle } from './battle';
-import { useInitBattleData } from '../features/battle/hooks/use-battle';
+import { useInitBattleData } from "features/battle/hooks";
 import { Test } from './test';
 import { ROUTES } from '../app/consts';
 
