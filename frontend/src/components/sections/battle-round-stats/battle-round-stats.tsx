@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { BattleRoundStatsAvatar } from 'components/sections/battle-round-stats-avatar';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { useBattle } from 'app/context';
 import { Countdown } from './counter';
 import { motion } from 'framer-motion';
@@ -38,9 +38,9 @@ const BattleTurnArrows = ({ isReverse }: { isReverse: boolean }) => {
   const cn = 'smh:w-6 w-7.5 xxl:w-10 aspect-[1/2] text-white';
   return (
     <div className={clsx('relative flex', isReverse && 'rotate-180')}>
-      <Icon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-1')} />
-      <Icon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-2')} />
-      <Icon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-3')} />
+      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-1')} />
+      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-2')} />
+      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-3')} />
     </div>
   );
 };

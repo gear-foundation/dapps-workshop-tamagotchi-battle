@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useRefDimensions } from 'app/hooks/use-ref-dimensions';
 import { motion, useAnimation } from 'framer-motion';
-import { Icon } from '../../ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import clsx from 'clsx';
 import { useBattle } from 'app/context';
 import { BattleStatePlayer } from 'app/types/battles';
@@ -55,9 +55,9 @@ export const BattleTableChampions = () => {
           className="inline-flex self-start my-10 px-2.5 py-8 btn--error bg-tertiary rounded-l-[6px]"
           onClick={onClick}>
           <span className="flex items-center gap-2.5 vertical-lr -rotate-180">
-            <Icon name="double-arrows" className={clsx('w-4 h-4 text-white', !isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', !isActive && 'rotate-180')} />
             <span className="font-kanit font-semibold uppercase tracking-[0.04em]">Show champions</span>
-            <Icon name="double-arrows" className={clsx('w-4 h-4 text-white', !isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', !isActive && 'rotate-180')} />
           </span>
         </button>
 
@@ -90,7 +90,7 @@ export const BattleTableChampions = () => {
               },
             }}
             aria-hidden>
-            <Icon name="decorative-bubble" className="w-full aspect-[306/48] text-tertiary opacity-80" />
+            <SpriteIcon name="decorative-bubble" className="w-full aspect-[306/48] text-tertiary opacity-80" />
           </motion.div>
         </section>
       </motion.div>
@@ -123,7 +123,7 @@ const BattleTablePairsRow = ({ player, position }: { player: BattleStatePlayer; 
         'flex items-center gap-4 w-full py-1 px-4 rounded-[30px] overflow-hidden',
         player.victories > 0 && position < 3 ? 'bg-gradient-to-b from-tertiary to-transparent' : 'bg-white/10',
       )}>
-      <Icon
+      <SpriteIcon
         name={
           player.victories > 0
             ? position === 0

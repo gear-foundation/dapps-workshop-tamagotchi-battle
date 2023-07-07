@@ -3,11 +3,13 @@ import { Home } from './home';
 import { Battle } from './battle';
 import { useInitBattleData } from 'app/hooks/use-battle';
 import { Test } from './test';
+import { ROUTES } from "../app/consts";
 
 const routes = [
-  { path: '/', Page: Home },
-  { path: '/battle', Page: Battle },
-  { path: '/test', Page: Test },
+  { path: ROUTES.HOME, Page: Home },
+  { path: ROUTES.GAME, Page: Battle },
+  { path: ROUTES.TEST, Page: Test },
+  { path: ROUTES.NOTFOUND, Page: Home },
 ];
 
 export const Routing = () => {

@@ -1,5 +1,5 @@
 import { TooltipWrapper, Button, buttonStyles } from '@gear-js/ui';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import clsx from 'clsx';
 
 export const GetGasBalance = () => {
@@ -10,8 +10,8 @@ export const GetGasBalance = () => {
           className={clsx('group !p-2.5', buttonStyles.lightGreen)}
           icon={() => (
             <>
-              <Icon name="test-balance" width={20} height={20} />
-              {/*<Icon*/}
+              <SpriteIcon name="test-balance" width={20} height={20} />
+              {/*<SpriteIcon*/}
               {/*  name="plus"*/}
               {/*  width={12}*/}
               {/*  height={12}*/}

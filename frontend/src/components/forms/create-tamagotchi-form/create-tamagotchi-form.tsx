@@ -2,7 +2,7 @@ import { Button, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { hexRequired } from 'app/utils/form-validations';
 import { createTamagotchiInitial } from 'app/consts';
-import { useApp } from 'app/context';
+import { useApp, useBattle } from "app/context";
 import { useBattleMessage } from 'app/hooks/use-battle';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ const validate: Record<string, typeof hexRequired> = {
 
 export const CreateTamagotchiForm = () => {
   const { isPending } = useApp();
+  const { battle } = useBattle();
   const handleMessage = useBattleMessage();
   const navigate = useNavigate();
   const form = useForm({
@@ -43,7 +44,7 @@ export const CreateTamagotchiForm = () => {
           text="Create Tamagotchi"
           color="primary"
           type="submit"
-          disabled={Object.keys(errors).length > 0 || isPending}
+          disabled={Object.keys(errors).length > 0 || isPending || battle?.state !== 'Registration'}
         />
       </div>
     </form>

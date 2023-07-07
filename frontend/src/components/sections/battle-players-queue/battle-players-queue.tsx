@@ -2,7 +2,7 @@ import { TamagotchiQueueCard } from 'components/cards/tamagotchi-queue-card';
 import 'keen-slider/keen-slider.min.css';
 import { KeenSliderOptions, useKeenSlider } from 'keen-slider/react';
 import { useEffect, useRef, useState } from 'react';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { useBattle } from 'app/context';
 import { useRefDimensions } from 'app/hooks/use-ref-dimensions';
 import { useIsLarge } from '../../../app/hooks/use-media';
@@ -113,10 +113,10 @@ const QueueSlider = () => {
     <div className="relative grow w-full">
       <div className="absolute bottom-full z-1 mb-3 xxl:mb-6 flex gap-4 xxl:gap-6">
         <button onClick={handlePrev} className="btn btn--primary-outline text-primary p-2 xxl:p-2.5 rounded-lg">
-          <Icon name="prev" className="w-3.5 xxl:w-4.5 aspect-square" />
+          <SpriteIcon name="prev" className="w-3.5 xxl:w-4.5 aspect-square" />
         </button>
         <button onClick={handleNext} className="btn btn--primary-outline text-primary p-2 xxl:p-2.5 rounded-lg">
-          <Icon name="prev" className="w-3.5 xxl:w-4.5 aspect-square rotate-180" />
+          <SpriteIcon name="prev" className="w-3.5 xxl:w-4.5 aspect-square rotate-180" />
         </button>
       </div>
       <motion.ol

@@ -1,7 +1,7 @@
 import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { Icon } from '../../ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { decodeAddress } from '@gear-js/api';
 import { copyToClipboard } from 'app/utils';
 import { useAlert } from '@gear-js/react-hooks';
@@ -38,7 +38,7 @@ export const AccountButton = ({ address, name, onClick, isActive, simple }: Prop
           type="button"
           onClick={onCopy}
           className="shrink-0 grow-0 transition-colors text-white text-opacity-80 hover:text-opacity-100 active:text-opacity-60">
-          <Icon name="copy" className="w-5 h-5" />
+          <SpriteIcon name="copy" className="w-5 h-5" />
         </button>
       )}
     </div>

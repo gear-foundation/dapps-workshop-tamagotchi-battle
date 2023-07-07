@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { StoreItemsNames } from 'app/types/ft-store';
 import { getTamagotchiAgeDiff } from 'app/utils/get-tamagotchi-age';
 import { TamagotchiAvatarEmotions } from 'app/types/tamagotchi';
@@ -90,7 +90,7 @@ export const TamagotchiAvatar = ({
             <div className={clsx('relative mx-auto aspect-square flex justify-center items-end', maxH)}>
               <AnimatePresence key="ap-damages">
                 {isDead && asPlayer && (
-                  <Icon
+                  <SpriteIcon
                     name="dead-shadow"
                     section={s}
                     className="max-w-[30%] h-5 mb-[3.72%] animate-deadTamagotchiShadow"
@@ -110,7 +110,7 @@ export const TamagotchiAvatar = ({
                       reverse ? 'smh:right-[5%] right-[10%]' : 'smh:left-[5%] left-[10%]',
                     )}>
                     <div className="grid place-items-center w-full h-full animate-damageIcon">
-                      <Icon
+                      <SpriteIcon
                         name="damage"
                         section={s}
                         className={clsx('absolute inset-0 w-full h-full', !reverse && '-scale-x-100')}
@@ -156,18 +156,18 @@ export const TamagotchiAvatar = ({
             maxH,
             isDead && asPlayer ? 'animate-deadTamagotchi' : reverse ? 'animate-tBreath2' : 'animate-tBreath',
           )}>
-          {!isDead && <Icon name={tail} section={s} className={cn} />}
-          {!isDead && <Icon name={hands} section={s} className={cn} />}
-          {!isDead && <Icon name="body-stand" section={s} className={cn} />}
-          {!isDead && <Icon name="sneakers" section={s} className={clsx(cn, getTamagotchiColor(color).sneakers)} />}
-          <Icon name={body} section={s} className={cn} />
-          {hasItem?.includes('bag') && <Icon name="body-bag" section={s} className={cn} />}
-          <Icon name={head} section={s} className={cn} />
-          <Icon name={mouse} section={s} className={cn} />
-          <Icon name={eye} section={s} className={clsx(cn, 'text-[#16B768]')} />
-          {emo === 'crying' && <Icon name="tears" section={s} className={cn} />}
-          {!isDead && glasses && <Icon name={glasses} section={s} className={cn} />}
-          {!isDead && hasItem?.includes('hat') && <Icon name="head-hat" section={s} className={cn} />}
+          {!isDead && <SpriteIcon name={tail} section={s} className={cn} />}
+          {!isDead && <SpriteIcon name={hands} section={s} className={cn} />}
+          {!isDead && <SpriteIcon name="body-stand" section={s} className={cn} />}
+          {!isDead && <SpriteIcon name="sneakers" section={s} className={clsx(cn, getTamagotchiColor(color).sneakers)} />}
+          <SpriteIcon name={body} section={s} className={cn} />
+          {hasItem?.includes('bag') && <SpriteIcon name="body-bag" section={s} className={cn} />}
+          <SpriteIcon name={head} section={s} className={cn} />
+          <SpriteIcon name={mouse} section={s} className={cn} />
+          <SpriteIcon name={eye} section={s} className={clsx(cn, 'text-[#16B768]')} />
+          {emo === 'crying' && <SpriteIcon name="tears" section={s} className={cn} />}
+          {!isDead && glasses && <SpriteIcon name={glasses} section={s} className={cn} />}
+          {!isDead && hasItem?.includes('hat') && <SpriteIcon name="head-hat" section={s} className={cn} />}
 
           {isDead && asPlayer && (
             <motion.div
@@ -182,12 +182,12 @@ export const TamagotchiAvatar = ({
                 reverse ? 'right-[8%]' : 'left-[8%]',
                 'animate-deadTamagotchiIcon',
               )}>
-              <Icon
+              <SpriteIcon
                 name="damage"
                 section={s}
                 className={clsx('absolute inset-0 w-full h-full', !reverse && '-scale-x-100')}
               />
-              <Icon name="death" section={s} className="relative z-1 w-[45%] aspect-square text-white" />
+              <SpriteIcon name="death" section={s} className="relative z-1 w-[45%] aspect-square text-white" />
             </motion.div>
           )}
         </motion.div>

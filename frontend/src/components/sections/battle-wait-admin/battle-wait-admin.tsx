@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { useApp, useBattle } from 'app/context';
 import { useBattleMessage } from 'app/hooks/use-battle';
 
@@ -38,7 +38,7 @@ export const BattleWaitAdmin = () => {
             )}
             onClick={handler}
             disabled={isPending || players.length < 2}>
-            <Icon name="swords" className="w-5 h-5" /> <span>Start Battle</span>
+            <SpriteIcon name="swords" className="w-5 h-5" /> <span>Start Battle</span>
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useBattle } from 'app/context';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TamagotchiQueueCard } from '../../cards/tamagotchi-queue-card';
 
@@ -69,7 +69,7 @@ const BattleRoundInfoBanner = () => {
       </h3>
       <div className="flex items-center gap-12 mt-4">
         <div className="flex items-center gap-2">
-          <Icon name="participants-alive" className="smh:w-5 w-6 aspect-square shrink-0" />
+          <SpriteIcon name="participants-alive" className="smh:w-5 w-6 aspect-square shrink-0" />
           <p className="flex items-center">
             Alive:{' '}
             <b className="inline-block ml-1 smh:text-[20px] smh:leading-none text-xl font-semibold text-white">
@@ -78,7 +78,7 @@ const BattleRoundInfoBanner = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Icon name="participants-dead" className="smh:w-5 w-6 aspect-square shrink-0" />
+          <SpriteIcon name="participants-dead" className="smh:w-5 w-6 aspect-square shrink-0" />
           <p className="flex items-center">
             Dead:{' '}
             <b className="inline-block ml-1 smh:text-[20px] smh:leading-none text-xl font-semibold text-white">

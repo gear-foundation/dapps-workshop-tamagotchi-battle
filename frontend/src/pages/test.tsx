@@ -1,4 +1,4 @@
-import { Icon } from '../components/ui/icon';
+import { SpriteIcon } from '../components/ui/sprite-icon';
 import { useState } from 'react';
 import { HexString } from '@polkadot/util/types';
 import { PlayerColor } from '../app/types/battles';
@@ -143,7 +143,7 @@ export const Test = () => {
                                 'btn btn--error items-center gap-2 w-full bg-error text-white transition-colors',
                                 buttonStyles.button,
                               )}>
-                              <Icon name="swords" className="w-5 h-5" /> Attack
+                              <SpriteIcon name="swords" className="w-5 h-5" /> Attack
                             </button>
                             <button
                               className={clsx(
@@ -151,7 +151,7 @@ export const Test = () => {
                                 buttonStyles.secondary,
                                 buttonStyles.button,
                               )}>
-                              <Icon name="armor" className="w-5 h-5" /> Defence
+                              <SpriteIcon name="armor" className="w-5 h-5" /> Defence
                             </button>
                           </>
                         )}
@@ -200,7 +200,7 @@ export const Test = () => {
                       </h3>
                       <div className="flex items-center gap-12 mt-4">
                         <div className="flex items-center gap-2">
-                          <Icon name="participants-alive" className="smh:w-5 w-6 aspect-square shrink-0" />
+                          <SpriteIcon name="participants-alive" className="smh:w-5 w-6 aspect-square shrink-0" />
                           <p className="flex items-center">
                             Alive:{' '}
                             <b className="inline-block ml-1 smh:text-[20px] smh:leading-none  text-xl font-semibold text-white">
@@ -209,7 +209,7 @@ export const Test = () => {
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Icon name="participants-dead" className="smh:w-5 w-6 aspect-square shrink-0" />
+                          <SpriteIcon name="participants-dead" className="smh:w-5 w-6 aspect-square shrink-0" />
                           <p className="flex items-center">
                             Dead:{' '}
                             <b className="inline-block ml-1 smh:text-[20px] smh:leading-none  text-xl font-semibold text-white">
@@ -244,9 +244,9 @@ const BattleTurnArrows = ({ isReverse }: { isReverse: boolean }) => {
   const cn = 'smh:w-6 w-7.5 xxl:w-10 aspect-[1/2] text-white';
   return (
     <div className={clsx('relative flex', isReverse && 'rotate-180')}>
-      <Icon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-1')} />
-      <Icon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-2')} />
-      <Icon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-3')} />
+      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-1')} />
+      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-2')} />
+      <SpriteIcon name="battle-next-step" className={clsx(cn, 'animate-battle-turn-3')} />
     </div>
   );
 };

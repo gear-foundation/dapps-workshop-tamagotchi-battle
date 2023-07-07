@@ -1,7 +1,7 @@
 import { useApp, useBattle } from 'app/context';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { useBattleMessage } from 'app/hooks/use-battle';
 import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
@@ -98,13 +98,13 @@ export const BattleRoundPlayers = () => {
                     )}
                     onClick={onAttack}
                     disabled={isPending || !isAllowed}>
-                    <Icon name="swords" className="w-5 h-5" /> Attack
+                    <SpriteIcon name="swords" className="w-5 h-5" /> Attack
                   </button>
                   <button
                     className={clsx('btn items-center gap-2 w-full', buttonStyles.secondary, buttonStyles.button)}
                     onClick={onDefence}
                     disabled={isPending || !isAllowed}>
-                    <Icon name="armor" className="w-5 h-5" /> Defence
+                    <SpriteIcon name="armor" className="w-5 h-5" /> Defence
                   </button>
                 </>
               )}

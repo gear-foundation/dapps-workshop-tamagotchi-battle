@@ -1,4 +1,4 @@
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import { useBattle } from 'app/context';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BattleStatePair, BattleStatePlayer } from 'app/types/battles';
@@ -68,7 +68,7 @@ export const BattleTablePairs = () => {
           </div>
 
           <div className="absolute top-0 left-6 w-[min(100%,306px)] blur-lg" aria-hidden>
-            <Icon name="decorative-bubble" className="w-full aspect-[306/48] text-primary opacity-80" />
+            <SpriteIcon name="decorative-bubble" className="w-full aspect-[306/48] text-primary opacity-80" />
           </div>
         </section>
 
@@ -76,9 +76,9 @@ export const BattleTablePairs = () => {
           className="inline-flex self-start my-10 px-2.5 py-8 btn--primary bg-primary rounded-r-[6px]"
           onClick={onClick}>
           <span className="flex items-center gap-2.5 vertical-rl -rotate-180">
-            <Icon name="double-arrows" className={clsx('w-4 h-4 text-white', isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', isActive && 'rotate-180')} />
             <span className="font-kanit font-semibold uppercase tracking-[0.04em]">Show battles</span>
-            <Icon name="double-arrows" className={clsx('w-4 h-4 text-white', isActive && 'rotate-180')} />
+            <SpriteIcon name="double-arrows" className={clsx('w-4 h-4 text-white', isActive && 'rotate-180')} />
           </span>
         </button>
       </motion.div>
@@ -171,7 +171,7 @@ const BattleTablePairsRow = ({ data: { pair, players, idx }, isActive }: { data:
           )}>
           {players[0].name}
         </span>
-        <Icon name="swords" className="w-3.5 h-3.5" />
+        <SpriteIcon name="swords" className="w-3.5 h-3.5" />
         <span
           className={clsx(
             'w-20 truncate text-left',

@@ -10,6 +10,13 @@ export const createTamagotchiInitial = {
   currentStep: 1,
 };
 
+export const ROUTES = {
+  HOME: '/',
+  GAME: '/battle',
+  TEST: '/test',
+  NOTFOUND: '*'
+}
+
 export const ENV = {
   store: process.env.REACT_APP_STORE_ADDRESS as HexString,
   balance: process.env.REACT_APP_FT_ADDRESS as HexString,

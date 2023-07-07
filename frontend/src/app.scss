@@ -1,6 +1,8 @@
 @use 'assets/styles';
 @use '@gear-js/ui/variables' as *;
 
+@import "index.css";
+
 :root {
   --color-secondary: #{red($textColorSecondary) green($textColorSecondary) blue($textColorSecondary)};
   --color-primary: #{red($successColor) green($successColor) blue($successColor)};

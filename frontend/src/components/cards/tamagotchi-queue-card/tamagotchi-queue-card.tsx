@@ -1,6 +1,6 @@
 import { TamagotchiAvatar } from 'components/common/tamagotchi-avatar';
 import clsx from 'clsx';
-import { Icon } from 'components/ui/icon';
+import { SpriteIcon } from '../../ui/sprite-icon';
 import type { BattleStatePlayer } from 'app/types/battles';
 import { Tooltip, TooltipWrapper } from '@gear-js/ui';
 
@@ -33,7 +33,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
       )}
 
       {dead && (
-        <Icon name="message-rip" className="absolute top-2 right-3 xxl:top-10 xxl:right-2 w-5 xxl:w-6 aspect-square" />
+        <SpriteIcon name="message-rip" className="absolute top-2 right-3 xxl:top-10 xxl:right-2 w-5 xxl:w-6 aspect-square" />
       )}
       <div className="relative w-14 xxl:w-24 aspect-square m-auto rounded-full overflow-hidden bg-white ring-white ring-4 ring-opacity-10">
         <TamagotchiAvatar
@@ -58,7 +58,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
           <div className="absolute inset-0 rounded-xl bg-primary" style={{ width: `${tamagotchi.health / 25}%` }} />
         )}
         <div className="relative flex gap-1 items-center justify-center">
-          <Icon name="health" className="w-3 xxl:w-3.5 aspect-square" />
+          <SpriteIcon name="health" className="w-3 xxl:w-3.5 aspect-square" />
           <span className="font-kanit text-xs font-medium leading-5">{Math.round(tamagotchi.health / 25)} / 100</span>
         </div>
       </div>
