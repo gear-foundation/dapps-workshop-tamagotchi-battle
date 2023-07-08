@@ -2,7 +2,7 @@ import { useBattle } from '../../context';
 import { SpriteIcon } from '../../../../components/ui/sprite-icon';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TamagotchiQueueCard } from '../tamagotchi-queue-card';
-import { withoutCommas } from '@gear-js/react-hooks';
+import { toNumber } from 'app/utils';
 
 export const BattleRoundInfo = () => {
   const { rivals, currentPlayer, currentPairIdx, battle } = useBattle();
@@ -74,7 +74,7 @@ const BattleRoundInfoBanner = () => {
           <p className="flex items-center">
             Alive:{' '}
             <b className="inline-block ml-1 smh:text-[20px] smh:leading-none text-xl font-semibold text-white">
-              {players.filter((el) => +withoutCommas(el.health)).length}
+              {players.filter((el) => toNumber(el.health)).length}
             </b>
           </p>
         </div>
@@ -83,7 +83,7 @@ const BattleRoundInfoBanner = () => {
           <p className="flex items-center">
             Dead:{' '}
             <b className="inline-block ml-1 smh:text-[20px] smh:leading-none text-xl font-semibold text-white">
-              {players.filter((el) => !+withoutCommas(el.health)).length}
+              {players.filter((el) => !toNumber(el.health)).length}
             </b>
           </p>
         </div>

@@ -3,7 +3,7 @@ import duration from 'dayjs/plugin/duration';
 import { toSeconds } from '../../utils';
 import { useEffect, useRef, useState } from 'react';
 import { useBattle } from '../../context';
-import { withoutCommas } from '@gear-js/react-hooks';
+import { toNumber } from 'app/utils';
 
 dayjs.extend(duration);
 
@@ -47,7 +47,7 @@ const usePairCountdown = () => {
     if (battle && battle.pairs[currentPairIdx].moveDeadline) {
       // console.log('mount and update data');
       const now = dayjs();
-      const deadline = dayjs(+withoutCommas(battle.pairs[currentPairIdx].moveDeadline));
+      const deadline = dayjs(toNumber(battle.pairs[currentPairIdx].moveDeadline));
       // const deadline = now.add(60, 'seconds');
 
       // console.log({

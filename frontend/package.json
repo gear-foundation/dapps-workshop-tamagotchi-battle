@@ -1,5 +1,5 @@
 {
-  "name": "gear-tamagotchi-battle",
+  "name": "gear-dapps-workshop-tamagotchi-battle",
   "version": "0.1.2",
   "private": true,
   "scripts": {
@@ -19,7 +19,6 @@
     "@polkadot/api": "10.9.1",
     "@polkadot/extension-dapp": "0.46.5",
     "@polkadot/react-identicon": "3.5.1",
-    "@polkadot/types": "10.9.1",
     "@polkadot/util": "12.3.2",
     "@radix-ui/react-scroll-area": "1.0.4",
     "clsx": "1.2.1",
@@ -30,8 +29,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.4.4",
-    "react-scripts": "5.0.1",
-    "web-vitals": "2.1.4"
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@types/react": "18.0.38",

@@ -7,7 +7,7 @@ import { WalletAccount } from 'features/wallet/components/wallet-account';
 import { useBattle } from 'features/battle/context';
 import { useBattleMessage } from 'features/battle/hooks';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
+import { cn } from 'app/utils';
 
 export const AccountComponent = () => {
   const { account } = useAccount();
@@ -37,7 +37,7 @@ export const AccountComponent = () => {
         <Button text="Start New Game" color="primary" onClick={handler} disabled={isPending} />
       )}
       {battle?.state === 'Registration' && isAdmin && pathname !== '/battle' && (
-        <Link to="/battle" className={clsx('btn transition-colors', buttonStyles.primary)}>
+        <Link to="/battle" className={cn('btn transition-colors', buttonStyles.primary)}>
           Battle Page
         </Link>
       )}

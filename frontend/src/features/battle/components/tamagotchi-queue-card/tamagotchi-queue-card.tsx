@@ -2,8 +2,7 @@ import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import type { BattleStatePlayer } from '../../types/battles';
 import { TooltipWrapper } from '@gear-js/ui';
-import { withoutCommas } from '@gear-js/react-hooks';
-import { cn } from 'app/utils';
+import { cn, toNumber } from 'app/utils';
 
 type TamagotchiQueueCardProps = {
   className?: string;
@@ -13,7 +12,7 @@ type TamagotchiQueueCardProps = {
 };
 
 export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive }: TamagotchiQueueCardProps) => {
-  const dead = !+withoutCommas(tamagotchi.health);
+  const dead = !toNumber(tamagotchi.health);
 
   return (
     <div
@@ -42,7 +41,7 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
       <div className="relative w-14 xxl:w-24 aspect-square m-auto rounded-full overflow-hidden bg-white ring-white ring-4 ring-opacity-10">
         <TamagotchiAvatar
           className="w-28 xxl:w-48 aspect-square -left-1/2"
-          age={+withoutCommas(tamagotchi.dateOfBirth)}
+          age={toNumber(tamagotchi.dateOfBirth)}
           color={tamagotchi.color}
           isDead={dead}
         />
@@ -61,13 +60,13 @@ export const TamagotchiQueueCard = ({ className, tamagotchi, asPlayer, isActive 
         {!dead && (
           <div
             className="absolute inset-0 rounded-xl bg-primary"
-            style={{ width: `${+withoutCommas(tamagotchi.health) / 25}%` }}
+            style={{ width: `${toNumber(tamagotchi.health) / 25}%` }}
           />
         )}
         <div className="relative flex gap-1 items-center justify-center">
           <SpriteIcon name="health" className="w-3 xxl:w-3.5 aspect-square" />
           <span className="font-kanit text-xs font-medium leading-5">
-            {Math.round(+withoutCommas(tamagotchi.health) / 25)} / 100
+            {Math.round(toNumber(tamagotchi.health) / 25)} / 100
           </span>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { useBattleMessage } from '../../hooks';
 import { useEffect, useState } from 'react';
 import { useAccount, withoutCommas } from '@gear-js/react-hooks';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
-import { cn } from 'app/utils';
+import { cn, toNumber } from 'app/utils';
 
 export const BattleRoundPlayers = () => {
   const { account } = useAccount();
@@ -44,11 +44,11 @@ export const BattleRoundPlayers = () => {
           <div className={cnWrapper}>
             <TamagotchiAvatar
               color={rivals[0].color}
-              age={+withoutCommas(rivals[0].dateOfBirth)}
+              age={toNumber(rivals[0].dateOfBirth)}
               className={cnT}
               isActive={battle.state !== 'WaitNextRound' && rivals[0].tmgId === currentPlayer}
               isWinner={battle.state === 'WaitNextRound' && battle.pairs[currentPairIdx].winner === rivals[0].tmgId}
-              isDead={!+withoutCommas(rivals[0].health)}
+              isDead={!toNumber(rivals[0].health)}
               damage={roundDamage ? Math.round(+roundDamage[1] / 25) : 0}
               action={roundDamage && (roundDamage[3] === null ? 'Skipped' : roundDamage[3])}
               asPlayer
@@ -113,11 +113,11 @@ export const BattleRoundPlayers = () => {
           <div className={cnWrapper}>
             <TamagotchiAvatar
               color={rivals[1].color}
-              age={+withoutCommas(rivals[1].dateOfBirth)}
+              age={toNumber(rivals[1].dateOfBirth)}
               className={cnT}
               isActive={battle.state !== 'WaitNextRound' && rivals[1].tmgId === currentPlayer}
               isWinner={battle.state === 'WaitNextRound' && battle.pairs[currentPairIdx].winner === rivals[1].tmgId}
-              isDead={!+withoutCommas(rivals[1].health)}
+              isDead={!toNumber(rivals[1].health)}
               damage={roundDamage ? Math.round(+roundDamage[2] / 25) : 0}
               action={roundDamage && (roundDamage[4] === null ? 'Skipped' : roundDamage[4])}
               reverse

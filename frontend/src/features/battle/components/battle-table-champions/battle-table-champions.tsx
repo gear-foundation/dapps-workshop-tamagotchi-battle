@@ -6,8 +6,7 @@ import { useBattle } from '../../context';
 import { BattleStatePlayer } from '../../types/battles';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import { ScrollArea } from 'components/ui/scroll-area';
-import { withoutCommas } from '@gear-js/react-hooks';
-import { cn } from 'app/utils';
+import { cn, toNumber } from 'app/utils';
 
 export const BattleTableChampions = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -106,7 +105,7 @@ const BattleTableList = () => {
     <ScrollArea className="max-h-80 pr-3 -mr-3">
       <ul className="leading-4 space-y-1.5">
         {players
-          .sort((p, c) => +withoutCommas(c.victories) - +withoutCommas(p.victories))
+          .sort((p, c) => toNumber(c.victories) - toNumber(p.victories))
           .map((player, i) => (
             <li key={i}>
               <BattleTablePairsRow player={player} position={i} />
@@ -118,7 +117,7 @@ const BattleTableList = () => {
 };
 
 const BattleTablePairsRow = ({ player, position }: { player: BattleStatePlayer; position: number }) => {
-  const victories = +withoutCommas(player.victories);
+  const victories = toNumber(player.victories);
   return (
     <div
       className={cn(
@@ -142,7 +141,7 @@ const BattleTablePairsRow = ({ player, position }: { player: BattleStatePlayer; 
       <div className="relative w-10 aspect-square rounded-full overflow-hidden ring-4 ring-opacity-10 bg-white ring-white">
         <TamagotchiAvatar
           className="w-20 aspect-square -left-1/2 pointer-events-none"
-          age={+withoutCommas(player.dateOfBirth)}
+          age={toNumber(player.dateOfBirth)}
           color={player.color}
         />
       </div>

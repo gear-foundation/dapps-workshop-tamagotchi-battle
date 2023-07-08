@@ -8,8 +8,7 @@ import { TamagotchiAvatar } from '../features/battle/components/tamagotchi-avata
 import { buttonStyles } from '@gear-js/ui';
 import { BattlePlayersQueue } from '../features/battle/components/battle-players-queue';
 import { TamagotchiQueueCard } from '../features/battle/components/tamagotchi-queue-card';
-import { withoutCommas } from '@gear-js/react-hooks';
-import { cn } from 'app/utils';
+import { cn, toNumber } from 'app/utils';
 
 const rivals = [
   {
@@ -92,11 +91,11 @@ export const Test = () => {
                     <div className={cnWrapper}>
                       <TamagotchiAvatar
                         color={rivals[0].color}
-                        age={+withoutCommas(rivals[0].dateOfBirth)}
+                        age={toNumber(rivals[0].dateOfBirth)}
                         className={cnT}
                         isActive={!active}
                         isWinner={false}
-                        isDead={!+withoutCommas(rivals[0].health)}
+                        isDead={!toNumber(rivals[0].health)}
                         damage={10}
                         action={'Skipped'}
                         asPlayer
@@ -161,11 +160,11 @@ export const Test = () => {
                     <div className={cnWrapper}>
                       <TamagotchiAvatar
                         color={rivals[1].color}
-                        age={+withoutCommas(rivals[1].dateOfBirth)}
+                        age={toNumber(rivals[1].dateOfBirth)}
                         className={cnT}
                         isActive={active}
                         isWinner={false}
-                        isDead={!+withoutCommas(rivals[1].health)}
+                        isDead={!toNumber(rivals[1].health)}
                         damage={20}
                         action={'Skipped'}
                         reverse
