@@ -14,9 +14,7 @@ const programId = BATTLE_ADDRESS;
 
 export function useInitBattleData() {
   const { api } = useApi();
-  // const alert = useAlert();
   const navigate = useNavigate();
-  const { setIsAdmin } = useBattle();
   const { account } = useAccount();
   const {
     roundDamage,
@@ -27,6 +25,7 @@ export function useInitBattleData() {
     setCurrentPairIdx,
     setRoundDamage,
     setPlayers,
+    setIsAdmin,
   } = useBattle();
   const { state } = useReadState<BattleStateResponse>({ programId, meta });
   const prevBattleState = useRef<BattleCurrentStateVariants | undefined>();
