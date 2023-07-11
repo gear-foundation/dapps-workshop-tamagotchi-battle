@@ -26,3 +26,5 @@ yarn-error.log*
 .idea
 *.meta.txt
 .binpath
+
+target
