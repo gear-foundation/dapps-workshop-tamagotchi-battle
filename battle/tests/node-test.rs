@@ -107,6 +107,7 @@ async fn send_message<T: Decode>(
 }
 
 #[tokio::test]
+#[ignore]
 async fn battle() -> Result<()> {
     // let address = WSAddress::new("wss://node-workshop.gear.rs", 443);
     // let client = GearApi::init_with(address, "//Alice").await?;
@@ -159,7 +160,7 @@ async fn battle() -> Result<()> {
 
     // register tamagotchis
     for i in 0..PLAYERS.len() {
-        let tmg_id = tmg_ids[i as usize];
+        let tmg_id = tmg_ids[i];
         let client = client
             .clone()
             .with(PLAYERS[i])
@@ -251,7 +252,7 @@ async fn battle() -> Result<()> {
         println!("Current Pair Ids {:?}", pair_ids);
         for pair_id in pair_ids.iter() {
             let mut game_is_over = false;
-            while game_is_over == false {
+            while !game_is_over {
                 let pair: Pair = client
                     .read_state_using_wasm_by_path(
                         battle_id.into(),

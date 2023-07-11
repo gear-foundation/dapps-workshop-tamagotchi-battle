@@ -34,11 +34,11 @@ license = "MIT"
 authors = ["Gear Technologies"]
 
 [workspace.dependencies]
-gstd = { git = "https://github.com/gear-tech/gear", rev = "78dfa07" }
-gmeta = { git = "https://github.com/gear-tech/gear", rev = "78dfa07" }
-gtest = { git = "https://github.com/gear-tech/gear", rev = "78dfa07" }
-gclient = { git = "https://github.com/gear-tech/gear", rev = "78dfa07" }
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear", rev = "78dfa07" }
+gstd = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
+gmeta = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
+gtest = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
+gclient = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
 parity-scale-codec = { version = "3", default-features = false }
 scale-info = { version = "2.7", default-features = false }
 battle-io = { path = "io" }
@@ -46,4 +46,4 @@ hex-literal = "0.3"
 tokio = "1"
 hex = "0.4"
 battle-state = { path = "state" }
-tmg-io = { git = "https://github.com/gear-dapps/workshop-tamagotchi", tag = "0.1.1" }
+tmg-io = {  git = "https://github.com/gear-dapps/workshop-tamagotchi", branch = "update-deps" }
