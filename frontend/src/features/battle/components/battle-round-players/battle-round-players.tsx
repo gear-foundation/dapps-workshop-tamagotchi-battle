@@ -3,7 +3,7 @@ import { buttonStyles } from '@gear-js/ui';
 import { SpriteIcon } from 'components/ui/sprite-icon';
 import { useBattleMessage } from '../../hooks';
 import { useEffect, useState } from 'react';
-import { useAccount, withoutCommas } from '@gear-js/react-hooks';
+import { useAccount } from '@gear-js/react-hooks';
 import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import { cn, toNumber } from 'app/utils';
 
